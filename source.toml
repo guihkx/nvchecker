@@ -1,0 +1,189 @@
+[__config__]
+oldver = "old.json"
+newver = "new.json"
+keyfile = "keys.toml"
+
+[Autoruns]
+source = "regex"
+regex = "Autoruns for Windows v([\\d.]+)"
+url = "https://docs.microsoft.com/en-us/sysinternals/downloads/autoruns"
+
+[BleachBit]
+source = "github"
+github = "bleachbit/bleachbit"
+use_max_tag = true
+prefix = "v"
+
+[CrystalDiskInfo]
+source = "regex"
+regex = "Download of CrystalDiskInfo ([\\d.]+)"
+url = "https://crystalmark.info/redirect.php?product=CrystalDiskInfo"
+
+[DetectItEasy]
+source = "github"
+github = "horsicq/DIE-engine"
+use_latest_release = true
+
+[DisplayDriverUninstaller]
+source = "regex"
+regex = "Display Driver Uninstaller Download version ([\\d.]+)"
+url = "https://www.guru3d.com/files-get/display-driver-uninstaller-download,1.html"
+
+[DriverStoreExplorer]
+source = "github"
+github = "lostindark/DriverStoreExplorer"
+use_latest_release = true
+prefix = "v"
+
+[ExeInfoPE]
+source = "regex"
+regex = "ersion[\\s\\t]+[\\r\\n][\\s\\t]*: ([\\d.]+)"
+url = "http://exeinfo.orgfree.com/"
+
+[HashCheck]
+source = "github"
+github = "gurnec/HashCheck"
+use_latest_release = true
+prefix = "v"
+
+[HTTPNetworkSniffer]
+source = "regex"
+regex = "HTTPNetworkSniffer v([\\d.]+)"
+url = "https://www.nirsoft.net/utils/http_network_sniffer.html"
+
+[HWiNFO]
+source = "regex"
+regex = "<dd itemprop=\"softwareVersion\">([\\d.]+)</dd>"
+url = "https://www.fosshub.com/HWiNFO.html"
+
+[HWMonitor]
+source = "regex"
+regex = "Version ([\\d.]+) for windows"
+url = "https://www.cpuid.com/softwares/hwmonitor.html"
+
+[IRPF2021]
+source = "regex"
+regex = "<pkgver>([\\d.]+)</pkgver>"
+url = "http://downloadirpf.receita.fazenda.gov.br/irpf/2021/irpf/update/latest.xml"
+
+[IRPF2021_XMLs]
+source = "cmd"
+cmd = "curl -s 'http://downloadirpf.receita.fazenda.gov.br/irpf/2021/irpf/update/latest.xml' | sed -e '1,8d' | perl -0 -pe 's/\\n\\Z//' | sha1sum | head -c 40"
+
+[KCleaner]
+source = "regex"
+regex = "<h3>KCleaner</h3>[\\r\\n\\s]*?<small>Version : <code>([\\d.]+)</code>"
+url = "https://www.kcsoftwares.com/?download"
+
+[KeyCastOW]
+source = "cmd"
+cmd = "curl -s 'https://raw.githubusercontent.com/brookhong/KeyCastOW/master/keycastow.rc' | iconv -f utf16 -t utf8 | grep -F 'FileVersion' | grep -Eo '[0-9.]+'"
+
+[LinuxReader]
+source = "regex"
+regex = "<span>Ver ([\\d.]+), Win</span>"
+url = "https://www.diskinternals.com/linux-reader/"
+
+[LiveTcpUdpWatch]
+source = "regex"
+regex = "LiveTcpUdpWatch v([\\d.]+)"
+url = "https://www.nirsoft.net/utils/live_tcp_udp_watch.html"
+
+[NVIDIA]
+# Linux drivers only!
+source = "regex"
+regex = "\"DisplayVersion\"\\s*:\\s*\"([\\d.]+)\""
+url = "https://gfwsl.geforce.com/services_toolkit/services/com/nvidia/services/AjaxDriverService.php?func=DriverManualLookup&psid=85&pfid=660&osID=12&languageCode=1033&beta=0&isWHQL=0&dltype=-1&dch=0&upCRD=0&qnf=0&sort1=0&numberOfResults=1"
+
+[ProcessExplorer]
+source = "regex"
+regex = "Process Explorer v([\\d.]+)"
+url = "https://docs.microsoft.com/en-us/sysinternals/downloads/process-explorer"
+
+[ProcessHacker]
+source = "github"
+github = "processhacker/processhacker"
+use_latest_release = true
+prefix = "v"
+
+[ProcessMonitor]
+source = "regex"
+regex = "Process Monitor v([\\d.]+)"
+url = "https://docs.microsoft.com/en-us/sysinternals/downloads/procmon"
+
+[ProduKey]
+source = "regex"
+regex = "ProduKey v([\\d.]+)"
+url = "https://www.nirsoft.net/utils/product_cd_key_viewer.html"
+
+[rsmixer]
+source = "github"
+github = "jantap/rsmixer"
+use_max_tag = true
+prefix = "v"
+
+[Rufus]
+source = "github"
+github = "pbatard/rufus"
+use_latest_release = true
+prefix = "v"
+
+[RDGPackerDetector]
+source = "regex"
+regex = "http://rdgsoft.net/downloads/RDG\\.Packer\\.Detector\\.v([\\d.]+)\\.zip"
+url = "http://www.rdgsoft.net"
+
+#[ShiginimaLauncher]
+#source = "regex"
+#regex = "<h1>Shiginima v([\\d.]+)</h1>"
+#url = "https://teamshiginima.com/update/"
+
+[SUMo]
+source = "regex"
+regex = "<h3>SUMo</h3>[\\r\\n\\s]*?<small>Version : <code>([\\d.]+)</code>"
+url = "https://www.kcsoftwares.com/?download"
+
+[TeamViewerLinux]
+source = "httpheader"
+regex = "teamviewer_([0-9.]+)_amd64\\.deb$"
+url = "https://download.teamviewer.com/download/linux/teamviewer_amd64.deb"
+
+[UnifiedRemoteServer]
+source = "httpheader"
+regex = "urserver-([0-9.]+)\\.deb$"
+url = "https://www.unifiedremote.com/download/linux-x64-deb"
+
+[USBDeview]
+source = "regex"
+regex = "USBDeview v([\\d.]+)"
+url = "https://www.nirsoft.net/utils/usb_devices_view.html"
+
+[vibranceGUI]
+source = "regex"
+regex = "AssemblyVersion\\(\"([\\d.]+)\"\\)"
+url = "https://raw.githubusercontent.com/juv/vibranceGUI/master/vibrance.GUI/Properties/AssemblyInfo.cs"
+
+[WinAuth]
+source = "github"
+github = "winauth/winauth"
+use_latest_release = true
+
+[Windows]
+source = "regex"
+regex = "Select edition</option><optgroup label=\"Windows (.+?) Update\""
+url = "https://www.microsoft.com/en-us/software-download/windows10ISO"
+
+[WinRAR]
+source = "regex"
+regex = "Version ([\\d.]+)[\\r\\n]"
+url = "https://rarlab.com/rarnew.htm"
+
+[WizTree]
+source = "regex"
+regex = ">V&nbsp;([\\d.]+)&nbsp;"
+url = "https://wiztreefree.com/download"
+
+[X-Ripper]
+source = "regex"
+regex = "\"softwareVersion\">([\\d.]+)"
+url = "http://www.zeus-software.com/downloads/xripper"
