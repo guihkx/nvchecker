@@ -48,6 +48,6 @@ The systemd timer/service is useful to automatically check for new app updates. 
     ```bash
     systemctl --user enable nvchecker.timer --now
     ```
-7. If there is any app update, you should get a nice desktop notification, like this:
+7. If there is an app update, you should get a nice desktop notification, like this:
 
-![Image](../blob/master/etc/notification.png?raw=true)
+    ![desktop notification](../master/etc/notification.png?raw=true)
