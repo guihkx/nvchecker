@@ -168,7 +168,7 @@ source = "github"
 github = "winauth/winauth"
 use_latest_release = true
 
-[Windows]
+[Windows10]
 source = "regex"
 regex = "Select edition</option><optgroup label=\"Windows (.+?) Update\""
 url = "https://www.microsoft.com/en-us/software-download/windows10ISO"
