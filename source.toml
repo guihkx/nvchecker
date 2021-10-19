@@ -40,6 +40,11 @@ source = "regex"
 regex = "ersion[\\s\\t]+[\\r\\n][\\s\\t]*: ([\\d.]+)"
 url = "http://exeinfo.orgfree.com/"
 
+[GPU-Z]
+source = "regex"
+regex = "TechPowerUp GPU-Z v([\\d.]+)"
+url = "https://www.techpowerup.com/download/techpowerup-gpu-z/"
+
 [HashCheck]
 source = "github"
 github = "gurnec/HashCheck"
