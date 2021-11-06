@@ -11,7 +11,7 @@ url = "https://docs.microsoft.com/en-us/sysinternals/downloads/autoruns"
 [BleachBit]
 source = "github"
 github = "bleachbit/bleachbit"
-use_max_tag = true
+use_latest_release = true
 prefix = "v"
 
 [CrystalDiskInfo]
