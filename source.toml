@@ -95,7 +95,7 @@ regex = "LiveTcpUdpWatch v([\\d.]+)"
 url = "https://www.nirsoft.net/utils/live_tcp_udp_watch.html"
 
 [NVIDIA]
-# Linux drivers only!
+# Linux drivers only (production branch)!
 source = "regex"
 regex = "\"DisplayVersion\"\\s*:\\s*\"([\\d.]+)\""
 url = "https://gfwsl.geforce.com/services_toolkit/services/com/nvidia/services/AjaxDriverService.php?func=DriverManualLookup&psid=85&pfid=660&osID=12&languageCode=1033&beta=0&isWHQL=0&dltype=-1&dch=0&upCRD=0&qnf=0&sort1=0&numberOfResults=1"
