@@ -2,6 +2,7 @@
 Description=Run nvchecker every hour
 
 [Timer]
+OnActiveSec=1min
 OnCalendar=hourly
 Persistent=true
 
