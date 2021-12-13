@@ -133,11 +133,6 @@ github = "pbatard/rufus"
 use_latest_release = true
 prefix = "v"
 
-[RDGPackerDetector]
-source = "regex"
-regex = "http://rdgsoft.net/downloads/RDG\\.Packer\\.Detector\\.v([\\d.]+)\\.zip"
-url = "http://www.rdgsoft.net"
-
 #[ShiginimaLauncher]
 #source = "regex"
 #regex = "<h1>Shiginima v([\\d.]+)</h1>"
