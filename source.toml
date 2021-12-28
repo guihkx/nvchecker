@@ -169,7 +169,7 @@ use_latest_release = true
 
 [Windows10]
 source = "regex"
-regex = "Select edition</option><optgroup label=\"Windows (.+?) Update\""
+regex = "<h2>Windows 10 (.+?) Update</h2>"
 url = "https://www.microsoft.com/en-us/software-download/windows10ISO"
 
 [WinRAR]
