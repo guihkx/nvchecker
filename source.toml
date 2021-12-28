@@ -96,9 +96,8 @@ url = "https://www.nirsoft.net/utils/live_tcp_udp_watch.html"
 
 [NVIDIA]
 # Linux drivers only (470xx production branch)!
-source = "regex"
-regex = "\"Version\"\\s*:\\s*\"([\\d.]+)\""
-url = "https://gfwsl.geforce.com/services_toolkit/services/com/nvidia/services/AjaxDriverService.php?func=DriverManualLookup&psid=85&pfid=660&osID=12&languageCode=1033&beta=0&isWHQL=0&dltype=-1&dch=0&upCRD=0&qnf=0&sort1=0&numberOfResults=1"
+source = "cmd"
+cmd = "curl -sL $(curl -s 'https://www.nvidia.com/Download/processDriver.aspx?psid=85&pfid=660&rpf=1&osid=12&lid=1&lang=en-us&ctk=0&dtid=1&dtcid=0') | grep -m1 'NVIDIA-Linux-x86_64' | sed -r 's/.*?Linux-x86_64\\/([0-9.]+).*/\\1/'"
 
 [ProcessExplorer]
 source = "regex"
