@@ -95,7 +95,13 @@ regex = "LiveTcpUdpWatch v([\\d.]+)"
 url = "https://www.nirsoft.net/utils/live_tcp_udp_watch.html"
 
 [NVIDIA_470]
-# Linux drivers only (Production Branch)!
+# Linux drivers only (R470 Legacy Branch)!
+source = "regex"
+regex = "<td class=\"gridItem\">([\\d.]+)</td>"
+url = "https://www.nvidia.com/Download/processFind.aspx?psid=85&pfid=660&osid=12&lid=1&whql=1&lang=en-us&ctk=0&qnfslb=01"
+
+[NVIDIA_Production]
+# Linux drivers only (Productiony Branch)
 source = "regex"
 regex = "<td class=\"gridItem\">([\\d.]+)</td>"
 url = "https://www.nvidia.com/Download/processFind.aspx?psid=120&pfid=930&osid=12&lid=1&whql=1&lang=en-us&ctk=0&qnfslb=01"
