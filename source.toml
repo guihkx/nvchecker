@@ -71,9 +71,10 @@ source = "regex"
 regex = "/arquivos/IRPF([\\d]+-[\\d.]+)\\.zip"
 url = "https://www.gov.br/receitafederal/pt-br/centrais-de-conteudo/download/pgd/dirpf"
 
-[IRPF2021_XMLs]
+[IRPF_XMLs]
+# dependencies: curl, xmlstarlet, coreutils
 source = "cmd"
-cmd = "curl -s 'http://downloadirpf.receita.fazenda.gov.br/irpf/2021/irpf/update/latest.xml' | sed -e '1,8d' | perl -0 -pe 's/\\n\\Z//' | sha1sum | head -c 40"
+cmd = 'curl -s "https://downloadirpf.receita.fazenda.gov.br/irpf/$(date +%Y)/irpf/update/latest.xml" | xmlstarlet sel -B -t -c "//information/extra/files" | sha1sum | head -c 40'
 
 [KCleaner]
 source = "regex"
