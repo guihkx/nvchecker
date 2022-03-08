@@ -66,10 +66,10 @@ source = "regex"
 regex = "Version ([\\d.]+) for windows"
 url = "https://www.cpuid.com/softwares/hwmonitor.html"
 
-[IRPF2021]
+[IRPF]
 source = "regex"
-regex = "<pkgver>([\\d.]+)</pkgver>"
-url = "http://downloadirpf.receita.fazenda.gov.br/irpf/2021/irpf/update/latest.xml"
+regex = "/arquivos/IRPF([\\d]+-[\\d.]+)\\.zip"
+url = "https://www.gov.br/receitafederal/pt-br/centrais-de-conteudo/download/pgd/dirpf"
 
 [IRPF2021_XMLs]
 source = "cmd"
