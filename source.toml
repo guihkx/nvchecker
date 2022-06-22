@@ -37,8 +37,8 @@ prefix = "v"
 
 [ExeInfoPE]
 source = "regex"
-regex = "ersion[\\s\\t]+[\\r\\n][\\s\\t]*: ([\\d.]+)"
-url = "http://exeinfo.orgfree.com/"
+regex = "Version[\\s\\t]*:[\\s\\t]*([\\d.]+)"
+url = "https://raw.githubusercontent.com/ExeinfoASL/ASL/master/file_id.diz"
 
 [GPU-Z]
 source = "regex"
