@@ -105,12 +105,6 @@ source = "regex"
 regex = "Process Explorer v([\\d.]+)"
 url = "https://docs.microsoft.com/en-us/sysinternals/downloads/process-explorer"
 
-[ProcessHacker]
-source = "github"
-github = "processhacker/processhacker"
-use_latest_release = true
-prefix = "v"
-
 [ProcessMonitor]
 source = "regex"
 regex = "Process Monitor v([\\d.]+)"
