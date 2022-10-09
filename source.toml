@@ -140,11 +140,6 @@ source = "regex"
 regex = "AssemblyVersion\\(\"([\\d.]+)\"\\)"
 url = "https://raw.githubusercontent.com/juv/vibranceGUI/master/vibrance.GUI/Properties/AssemblyInfo.cs"
 
-[WinAuth]
-source = "github"
-github = "winauth/winauth"
-use_latest_release = true
-
 [Windows10]
 source = "regex"
 regex = "<h2>Windows 10 (.+?) Update</h2>"
