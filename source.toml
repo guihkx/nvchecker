@@ -13,11 +13,6 @@ source = "regex"
 regex = "Download of CrystalDiskInfo ([\\d.]+)"
 url = "https://crystalmark.info/redirect.php?product=CrystalDiskInfo"
 
-[DetectItEasy]
-source = "github"
-github = "horsicq/DIE-engine"
-use_latest_release = true
-
 [DisplayDriverUninstaller]
 source = "regex"
 regex = "Display Driver Uninstaller Download version ([\\d.]+)"
