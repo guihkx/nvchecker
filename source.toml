@@ -8,12 +8,6 @@ source = "regex"
 regex = "Autoruns for Windows v([\\d.]+)"
 url = "https://docs.microsoft.com/en-us/sysinternals/downloads/autoruns"
 
-[BleachBit]
-source = "github"
-github = "bleachbit/bleachbit"
-use_latest_release = true
-prefix = "v"
-
 [CrystalDiskInfo]
 source = "regex"
 regex = "Download of CrystalDiskInfo ([\\d.]+)"
