@@ -115,12 +115,6 @@ source = "regex"
 regex = "ProduKey v([\\d.]+)"
 url = "https://www.nirsoft.net/utils/product_cd_key_viewer.html"
 
-[Rufus]
-source = "github"
-github = "pbatard/rufus"
-use_latest_release = true
-prefix = "v"
-
 [SUMo]
 source = "regex"
 regex = "<h3>SUMo</h3>[\\r\\n\\s]*?<small>Version : <code>([\\d.]+)</code>"
