@@ -156,11 +156,6 @@ github = "pbatard/rufus"
 use_latest_release = true
 prefix = "v"
 
-#[ShiginimaLauncher]
-#source = "regex"
-#regex = "<h1>Shiginima v([\\d.]+)</h1>"
-#url = "https://teamshiginima.com/update/"
-
 [SUMo]
 source = "regex"
 regex = "<h3>SUMo</h3>[\\r\\n\\s]*?<small>Version : <code>([\\d.]+)</code>"
