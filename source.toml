@@ -18,12 +18,6 @@ source = "regex"
 regex = "Display Driver Uninstaller Download version ([\\d.]+)"
 url = "https://www.guru3d.com/files-get/display-driver-uninstaller-download,1.html"
 
-[DriverStoreExplorer]
-source = "github"
-github = "lostindark/DriverStoreExplorer"
-use_latest_release = true
-prefix = "v"
-
 [ExeInfoPE]
 source = "regex"
 regex = "Version[\\s\\t]*:[\\s\\t]*([\\d.]+)"
