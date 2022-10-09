@@ -28,12 +28,6 @@ source = "regex"
 regex = "TechPowerUp GPU-Z v([\\d.]+)"
 url = "https://www.techpowerup.com/download/techpowerup-gpu-z/"
 
-[HashCheck]
-source = "github"
-github = "gurnec/HashCheck"
-use_latest_release = true
-prefix = "v"
-
 [HTTPNetworkSniffer]
 source = "regex"
 regex = "HTTPNetworkSniffer v([\\d.]+)"
