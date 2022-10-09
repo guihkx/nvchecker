@@ -49,7 +49,7 @@ regex = "/arquivos/IRPF([\\d]+-[\\d.]+)\\.zip"
 url = "https://www.gov.br/receitafederal/pt-br/centrais-de-conteudo/download/pgd/dirpf"
 
 [IRPF_XMLs]
-# dependencies: curl, xmlstarlet, coreutils
+# dependencies: coreutils, curl, xmlstarlet
 source = "cmd"
 cmd = 'curl -s "https://downloadirpf.receita.fazenda.gov.br/irpf/$(date +%Y)/irpf/update/latest.xml" | xmlstarlet sel -B -t -c "//information/extra/files" | sha1sum | head -c 40'
 
@@ -73,13 +73,13 @@ regex = "LiveTcpUdpWatch v([\\d.]+)"
 url = "https://www.nirsoft.net/utils/live_tcp_udp_watch.html"
 
 [NVIDIA_470]
-# Linux drivers only (R470 Legacy Branch)!
+# Linux drivers only (R470 Legacy Branch)
 source = "regex"
 regex = "<td class=\"gridItem\">([\\d.]+)</td>"
 url = "https://www.nvidia.com/Download/processFind.aspx?psid=85&pfid=660&osid=12&lid=1&whql=1&lang=en-us&ctk=0&qnfslb=01"
 
 [NVIDIA_Production]
-# Linux drivers only (Productiony Branch)
+# Linux drivers only (Production Branch)
 source = "regex"
 regex = "<td class=\"gridItem\">([\\d.]+)</td>"
 url = "https://www.nvidia.com/Download/processFind.aspx?psid=120&pfid=930&osid=12&lid=1&whql=1&lang=en-us&ctk=0&qnfslb=01"
