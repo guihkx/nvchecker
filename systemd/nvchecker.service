@@ -5,6 +5,12 @@ After=network-online.target
 [Service]
 Type=oneshot
 WorkingDirectory=%h/Projects/github/nvchecker
+# A very hacky and ugly way to only run the service with a working internet connection.
+# The nvchecker-notify script will only run if the ping to $TEST_HOST succeeds.
+Environment=TEST_HOST=www.google.com
+Environment=MAX_TRIES=5
+Environment=SLEEP_SECS=60
+ExecStartPre=/bin/sh -c 'i=1; while [ $i -le $MAX_TRIES ]; do if ping -c1 $TEST_HOST &> /dev/null; then exit 0; else echo "[nvchecker] No internet connection (attempt $i of $MAX_TRIES)."; if [ $i -eq $MAX_TRIES ]; then break; else sleep $SLEEP_SECS; fi; fi; i=$((i+1)); done; echo "[nvchecker] Exceeded all attempts, refusing to run."; exit 1'
 ExecStart=/usr/bin/nvchecker-notify -c source.toml
 
 [Install]
