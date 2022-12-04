@@ -53,11 +53,6 @@ url = "https://www.gov.br/receitafederal/pt-br/centrais-de-conteudo/download/pgd
 source = "cmd"
 cmd = 'curl -s "https://downloadirpf.receita.fazenda.gov.br/irpf/$(date +%Y)/irpf/update/latest.xml" | xmlstarlet sel -B -t -c "//information/extra/files" | sha1sum | head -c 40'
 
-[KCleaner]
-source = "regex"
-regex = "<h3>KCleaner</h3>[\\r\\n\\s]*?<small>Version : <code>([\\d.]+)</code>"
-url = "https://www.kcsoftwares.com/?download"
-
 [KeyCastOW]
 source = "cmd"
 cmd = "curl -s 'https://raw.githubusercontent.com/brookhong/KeyCastOW/master/keycastow.rc' | iconv -f utf16 -t utf8 | grep -F 'FileVersion' | grep -Eo '[0-9.]+'"
