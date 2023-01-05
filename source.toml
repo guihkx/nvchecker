@@ -51,7 +51,7 @@ url = "https://www.gov.br/receitafederal/pt-br/centrais-de-conteudo/download/pgd
 [IRPF_XMLs]
 # dependencies: coreutils, curl, xmlstarlet
 source = "cmd"
-cmd = 'curl -s "https://downloadirpf.receita.fazenda.gov.br/irpf/$(date +%Y)/irpf/update/latest.xml" | xmlstarlet sel -B -t -c "//information/extra/files" | sha1sum | head -c 40'
+cmd = 'curl -s "https://downloadirpf.receita.fazenda.gov.br/irpf/2022/irpf/update/latest.xml" | xmlstarlet sel -B -t -c "//information/extra/files" | sha1sum | head -c 40'
 
 [KeyCastOW]
 source = "cmd"
