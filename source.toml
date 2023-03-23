@@ -66,8 +66,16 @@ fi
 """
 
 [KeyCastOW]
+# dependencies: coreutils, curl
 source = "cmd"
-cmd = "curl -s 'https://raw.githubusercontent.com/brookhong/KeyCastOW/master/keycastow.rc' | iconv -f utf16 -t utf8 | grep -F 'FileVersion' | grep -Eo '[0-9.]+'"
+cmd = """
+if res=$(curl -fsS 'https://raw.githubusercontent.com/brookhong/KeyCastOW/master/keycastow.rc')
+then
+  echo "${res}" | tr -d '\\0' | grep -oPm1 '"FileVersion" *, *"\\K[^"]+'
+else
+  exit $?
+fi
+"""
 
 [LinuxReader]
 source = "regex"
