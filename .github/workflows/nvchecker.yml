@@ -1,0 +1,246 @@
+name: nvchecker
+
+on:
+  schedule:
+    - cron: '*/30 * * * *' # every 30 minutes
+  workflow_dispatch:
+
+env:
+  NVCHECKER_SOURCES_FILE: 'source.toml'
+  _YQ_VERSION_: '4.32.2'
+  _DASEL_VERSION_: '2.1.1'
+
+jobs:
+  main:
+    name: Check
+    runs-on: ubuntu-latest
+
+    steps:
+      # xmlstarlet: needed for the IRPF_XMLs source
+      - name: Install source dependencies
+        run: |
+          sudo apt update
+          sudo apt install xmlstarlet
+
+      - name: Install nvchecker
+        run: |
+          sudo apt install libcurl4-openssl-dev
+          # Install it via pip because Ubuntu 22.04 currently only offers v2.5 through its repositories.
+          pip3 install nvchecker==2.6.1
+
+      - name: Install yq
+        run: |
+          curl --fail --location --retry 5 --output /usr/local/bin/yq \
+            https://github.com/mikefarah/yq/releases/download/v${{ env._YQ_VERSION_ }}/yq_linux_amd64
+          chmod +x /usr/local/bin/yq
+
+      # TODO: Replace dasel in favor of yq once TOML support is added:
+      #       https://github.com/mikefarah/yq/issues/1364
+      - name: Install dasel
+        run: |
+          curl --fail --location --retry 5 --output /usr/local/bin/dasel \
+            https://github.com/TomWright/dasel/releases/download/v${{ env._DASEL_VERSION_ }}/dasel_linux_amd64
+          chmod +x /usr/local/bin/dasel
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up variables
+        id: vars
+        run: |
+         set -x
+         set -e
+         echo "keyfile=$(dasel -f '${{ env.NVCHECKER_SOURCES_FILE }}' '__config__.keyfile')" >> "${GITHUB_OUTPUT}"
+         echo "newver=$(dasel -f '${{ env.NVCHECKER_SOURCES_FILE }}' '__config__.newver')" >> "${GITHUB_OUTPUT}"
+         echo "oldver=$(dasel -f '${{ env.NVCHECKER_SOURCES_FILE }}' '__config__.oldver')" >> "${GITHUB_OUTPUT}"
+
+      - name: Set up keys file
+        run: |
+          set -x
+          set -e
+          if [ -n '${{ steps.vars.outputs.keyfile }}' ] && [ -f '${{ steps.vars.outputs.keyfile }}' ]
+          then
+            echo 'WARNING: nvchecker key file already resides in this repository!'
+            exit 0
+          fi
+          touch '${{ steps.vars.outputs.keyfile }}'
+          if [ -n '${{ secrets.API_KEY_GITHUB }}' ]
+          then
+            dasel put -f '${{ steps.vars.outputs.keyfile }}' -t string -v '${{ secrets.API_KEY_GITHUB }}' 'keys.github'
+            echo 'Added GitHub API key to nvchecker key file.'
+          else
+            echo 'WARNING: GitHub Secret for GitHub API key is not set up!'
+          fi
+
+      - name: Run nvchecker
+        # We're only using to get nice colors in output
+        shell: 'script -q -O /dev/null -e -c "bash {0}"'
+        env:
+          TERM: xterm-256color
+        run: nvchecker --file '${{ env.NVCHECKER_SOURCES_FILE }}' --tries 5
+
+      - name: Determine if there are updates
+        id: results
+        run: |
+          set -x
+          set -e
+          if cmp -s '${{ steps.vars.outputs.oldver }}' '${{ steps.vars.outputs.newver }}'
+          then
+            echo 'No updates were found.'
+            exit 0
+          fi
+          outdated_entries_json='[]'
+          failing_entries_json='[]'
+          # FIXME: Optimize this.
+          for entry in $(yq -r '.[] | key' '${{ steps.vars.outputs.oldver }}')
+          do
+            oldver=$(yq -r $".[\"${entry}\"]" '${{ steps.vars.outputs.oldver }}')
+            newver=$(yq -r $".[\"${entry}\"] // \"\"" '${{ steps.vars.outputs.newver }}')
+            if [ -z "${newver}" ]
+            then
+              failing_entries_json=$(yq -r $". += \"${entry}\" | @json" <<< "${failing_entries_json}")
+            elif [ "${oldver}" != "${newver}" ]
+            then
+              outdated_entries_json=$(yq -r $". += \"${entry}\" | @json" <<< "${outdated_entries_json}")
+            fi
+          done
+          echo "failing_entries_json=${failing_entries_json}" >> "${GITHUB_OUTPUT}"
+          echo "failing_entries_total=$(yq length <<< ${failing_entries_json})" >> "${GITHUB_OUTPUT}"
+          echo "outdated_entries_json=${outdated_entries_json}" >> "${GITHUB_OUTPUT}"
+          echo "outdated_entries_total=$(yq length <<< ${outdated_entries_json})" >> "${GITHUB_OUTPUT}"
+
+      - name: Create pull request for outdated entries
+        if: steps.results.outputs.outdated_entries_total > 0
+        run: |
+          set -x
+          set -e
+          # Configure git
+          git_username='github-actions[bot]'
+          git_email='41898282+github-actions[bot]@users.noreply.github.com'
+          git config user.name "${git_username}"
+          git config user.email "${git_email}"
+
+          # Check if there is a PR already opened by 'us'. If there is, abort with no error.
+          n_prs=$(curl --fail \
+            --silent \
+            --show-error \
+            --location \
+            --retry 5 \
+            --get \
+            --data-urlencode 'state=open' \
+            --header 'Accept: application/vnd.github+json' \
+            --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+            --header 'X-GitHub-Api-Version: 2022-11-28' \
+            https://api.github.com/repos/${{ github.repository }}/pulls |
+            yq -r $"[.[].user.login | select(. == \"${git_username}\")] | length")
+
+          if [ "${n_prs}" -gt 0 ]
+          then
+            echo 'WARNING: A pull request is already open, refusing to open a new one.'
+            exit 0
+          fi
+
+          # Prepare PR.
+          if [ '${{ steps.results.outputs.outdated_entries_total }}' -gt 1 ]
+          then
+            pr_body='This PR updates ${{ steps.results.outputs.outdated_entries_total }} nvchecker entries from `${{ env.NVCHECKER_SOURCES_FILE }}`:\n\n'
+          else
+            pr_body='This PR updates a single nvchecker entry from `${{ env.NVCHECKER_SOURCES_FILE }}`:\n\n'
+          fi
+
+          cp -v '${{ steps.vars.outputs.newver }}' '${{ steps.vars.outputs.newver }}~'
+          git restore '${{ steps.vars.outputs.newver }}'
+          branch="nvchecker-$(openssl rand -hex 4)"
+          git checkout -b "${branch}"
+          for entry in $(yq -r '.[]' <<< '${{ steps.results.outputs.outdated_entries_json }}')
+          do
+            oldver=$(yq -r $".[\"${entry}\"]" '${{ steps.vars.outputs.oldver }}')
+            newver=$(yq -r $".[\"${entry}\"]" '${{ steps.vars.outputs.newver }}~')
+            yq -i $".[\"${entry}\"] = \"${newver}\"" '${{ steps.vars.outputs.oldver }}'
+            yq -i $".[\"${entry}\"] = \"${newver}\"" '${{ steps.vars.outputs.newver }}'
+            git add '${{ steps.vars.outputs.oldver }}' '${{ steps.vars.outputs.newver }}'
+            git commit -m "nvchecker: ${entry} ${oldver} -> ${newver}"
+            pr_body+=$"- ${entry}: \`${oldver}\` -> \`${newver}\`\n"
+          done
+          pr_body+='\n---\n*This pull request was automatically generated by '
+          pr_body+='[this GitHub Actions run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}).*'
+          git --no-pager log -n${{ steps.results.outputs.outdated_entries_total }}
+          git push -u origin "${branch}"
+
+          if [ '${{ steps.results.outputs.outdated_entries_total }}' -gt 1 ]
+          then
+            pr_title='nvchecker: Update ${{ steps.results.outputs.outdated_entries_total }} entries'
+          else
+            pr_title=$"nvchecker: ${entry} \`${oldver}\` -> \`${newver}\"
+          fi
+
+          pr=$(curl --fail \
+            --silent \
+            --show-error \
+            --location \
+            --retry 5 \
+            --header 'Accept: application/vnd.github+json' \
+            --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+            --header 'X-GitHub-Api-Version: 2022-11-28' \
+            --data $"{\"title\":\"${pr_title}\",\"body\":\"${pr_body}\",\"head\":\"${{ github.actor }}:${branch}\",\"base\":\"${{ github.head_ref || github.ref_name }}\"}" \
+            https://api.github.com/repos/${{ github.repository }}/pulls)
+
+      - name: Create issue for failing entries
+        if: steps.results.outputs.failing_entries_total > 0
+        run: |
+          set -e
+          set -x
+          git_username=$(git config user.name)
+
+          # Check if there is an issue already opened by 'us'. If there is, abort with no error.
+          n_issues=$(curl --fail \
+            --silent \
+            --show-error \
+            --location \
+            --retry 5 \
+            --get \
+            --data-urlencode 'state=open' \
+            --header 'Accept: application/vnd.github+json' \
+            --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+            --header 'X-GitHub-Api-Version: 2022-11-28' \
+            https://api.github.com/repos/${{ github.repository }}/issues |
+            yq -r $"[.[] | select(.user.login == \"${git_username}\" and .node_id == \"I_*\")] | length")
+
+          if [ "${n_issues}" -gt 0 ]
+          then
+            echo 'WARNING: An issue is already open, refusing to open a new one.'
+            exit 0
+          fi
+
+          # Prepare issue.
+          if [ '${{ steps.results.outputs.failing_entries_total }}' -gt 1 ]
+          then
+            issue_body='The following ${{ steps.results.outputs.failing_entries_total }} nvchecker entries from `${{ env.NVCHECKER_SOURCES_FILE }}` are currently failing:\n\n'
+          else
+            issue_body='The following nvchecker entry from `${{ env.NVCHECKER_SOURCES_FILE }}` is currently failing:\n\n'
+          fi
+
+          for entry in $(yq -r '.[]' <<< '${{ steps.results.outputs.failing_entries_json }}')
+          do
+            issue_body+=$"- ${entry}\n"
+          done
+          issue_body+='\n---\n*This issue was automatically generated by '
+          issue_body+='[this GitHub Actions run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}).*'
+
+          if [ '${{ steps.results.outputs.failing_entries_total }}' -gt 1 ]
+          then
+            issue_title='nvchecker: ${{ steps.results.outputs.failing_entries_total }} entries are failing'
+          else
+            issue_title=$"nvchecker: The \`${entry}\` entry is failing"
+          fi
+
+          issue=$(curl --fail \
+            --silent \
+            --show-error \
+            --location \
+            --retry 5 \
+            --header 'Accept: application/vnd.github+json' \
+            --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+            --header 'X-GitHub-Api-Version: 2022-11-28' \
+            --data $"{\"title\":\"${issue_title}\",\"body\":\"${issue_body}\"}" \
+            https://api.github.com/repos/${{ github.repository }}/issues)
