@@ -171,7 +171,7 @@ jobs:
           then
             pr_title='nvchecker: Update ${{ steps.results.outputs.outdated_entries_total }} entries'
           else
-            pr_title=$"nvchecker: ${entry} \`${oldver}\` -> \`${newver}\"
+            pr_title=$"nvchecker: ${entry} \`${oldver}\` -> \`${newver}\`"
           fi
 
           pr=$(curl --fail \
