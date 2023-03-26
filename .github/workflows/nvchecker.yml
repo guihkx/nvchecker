@@ -188,6 +188,12 @@ jobs:
             --data $"{\"title\":\"${pr_title}\",\"body\":\"${pr_body}\",\"head\":\"${{ github.actor }}:${branch}\",\"base\":\"${{ github.head_ref || github.ref_name }}\"}" \
             https://api.github.com/repos/${{ github.repository }}/pulls)
 
+          # Delete created branch if opening the PR fails.
+          if [ $? -ne 0 ]
+          then
+            git push origin ":${branch}"
+          fi
+
       - name: Create issue for failing entries
         if: steps.results.outputs.failing_entries_total > 0
         run: |
