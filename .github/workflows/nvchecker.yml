@@ -7,7 +7,7 @@ on:
 
 env:
   NVCHECKER_SOURCES_FILE: 'source.toml'
-  _YQ_VERSION_: '4.32.2'
+  _YQ_VERSION_: '4.33.1'
   _DASEL_VERSION_: '2.1.1'
 
 jobs:
