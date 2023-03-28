@@ -2,8 +2,8 @@
 
 ## Dependencies
 
-* [nvchecker](https://github.com/lilydjwg/nvchecker) (version >=2.3)
-* Config-specific (most of them are probably already installed): `coreutils`, `curl`, `grep`, `iconv`, `perl`, `sed`
+* [nvchecker](https://github.com/lilydjwg/nvchecker) (>= 2.6)
+* Config-specific (most of them are probably already installed): `coreutils`, `curl`, `grep`
 
 ## `source.toml`
 
@@ -44,7 +44,7 @@ The systemd timer/service is useful to automatically check for new app updates. 
     ```bash
     systemctl --user daemon-reload
     ```
-6. Enable the timer:
+6. Enable and start the timer:
     ```bash
     systemctl --user enable nvchecker.timer --now
     ```
