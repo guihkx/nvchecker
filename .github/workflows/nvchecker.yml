@@ -8,7 +8,6 @@ on:
 env:
   NVCHECKER_SOURCES_FILE: 'source.toml'
   _YQ_VERSION_: '4.33.1'
-  _DASEL_VERSION_: '2.1.1'
 
 jobs:
   main:
@@ -34,26 +33,20 @@ jobs:
             https://github.com/mikefarah/yq/releases/download/v${{ env._YQ_VERSION_ }}/yq_linux_amd64
           chmod +x /usr/local/bin/yq
 
-      # TODO: Replace dasel in favor of yq once TOML support is added:
-      #       https://github.com/mikefarah/yq/issues/1364
-      - name: Install dasel
-        run: |
-          curl --fail --location --retry 5 --output /usr/local/bin/dasel \
-            https://github.com/TomWright/dasel/releases/download/v${{ env._DASEL_VERSION_ }}/dasel_linux_amd64
-          chmod +x /usr/local/bin/dasel
-
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # TODO: Remove '-o json' once yq adds proper write support for TOML files.
       - name: Set up variables
         id: vars
         run: |
          set -x
          set -e
-         echo "keyfile=$(dasel -f '${{ env.NVCHECKER_SOURCES_FILE }}' '__config__.keyfile')" >> "${GITHUB_OUTPUT}"
-         echo "newver=$(dasel -f '${{ env.NVCHECKER_SOURCES_FILE }}' '__config__.newver')" >> "${GITHUB_OUTPUT}"
-         echo "oldver=$(dasel -f '${{ env.NVCHECKER_SOURCES_FILE }}' '__config__.oldver')" >> "${GITHUB_OUTPUT}"
+         echo "keyfile=$(yq -r '.__config__.keyfile' -o json '${{ env.NVCHECKER_SOURCES_FILE }}')" >> "${GITHUB_OUTPUT}"
+         echo "newver=$(yq -r '.__config__.newver' -o json '${{ env.NVCHECKER_SOURCES_FILE }}')" >> "${GITHUB_OUTPUT}"
+         echo "oldver=$(yq -r '.__config__.oldver' -o json '${{ env.NVCHECKER_SOURCES_FILE }}')" >> "${GITHUB_OUTPUT}"
 
+      # TODO: Once yq adds write support for TOML files, use it instead of creating the keys file by hand using 'echo'.
       - name: Set up keys file
         run: |
           set -x
@@ -63,10 +56,11 @@ jobs:
             echo 'WARNING: nvchecker key file already resides in this repository!'
             exit 0
           fi
-          touch '${{ steps.vars.outputs.keyfile }}'
+          echo '[keys]' > '${{ steps.vars.outputs.keyfile }}'
           if [ -n '${{ secrets.API_KEY_GITHUB }}' ]
           then
-            dasel put -f '${{ steps.vars.outputs.keyfile }}' -t string -v '${{ secrets.API_KEY_GITHUB }}' 'keys.github'
+            echo '[keys]' > '${{ steps.vars.outputs.keyfile }}'
+            echo 'github = "${{ secrets.API_KEY_GITHUB }}"' >> '${{ steps.vars.outputs.keyfile }}'
             echo 'Added GitHub API key to nvchecker key file.'
           else
             echo 'WARNING: GitHub Secret for GitHub API key is not set up!'
