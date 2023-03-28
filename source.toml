@@ -108,7 +108,7 @@ url = "https://developer.nvidia.com/vulkan-driver"
 [ProcessExplorer]
 source = "regex"
 regex = "Process Explorer v([\\d.]+)"
-url = "https://docs.microsoft.com/en-us/sysinternals/downloads/process-explorer"
+url = "https://raw.githubusercontent.com/MicrosoftDocs/sysinternals/live/sysinternals/downloads/process-explorer.md"
 
 [ProcessMonitor]
 source = "regex"
