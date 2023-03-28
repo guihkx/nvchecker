@@ -157,7 +157,7 @@ url = "https://raw.githubusercontent.com/juv/vibranceGUI/master/vibrance.GUI/Pro
 
 [Windows10]
 source = "regex"
-regex = "<h2>Windows 10 .+? Update | Version (.+?)</h2>"
+regex = "<h2>Windows 10 .+? Update \\| Version (.+?)</h2>"
 url = "https://www.microsoft.com/en-us/software-download/windows10ISO"
 
 [Windows11]
