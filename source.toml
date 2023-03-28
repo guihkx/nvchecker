@@ -28,11 +28,6 @@ source = "regex"
 regex = "TechPowerUp GPU-Z v([\\d.]+)"
 url = "https://www.techpowerup.com/download/techpowerup-gpu-z/"
 
-[HTTPNetworkSniffer]
-source = "regex"
-regex = "HTTPNetworkSniffer v([\\d.]+)"
-url = "https://www.nirsoft.net/utils/http_network_sniffer.html"
-
 [HWiNFO]
 source = "regex"
 regex = "<dd itemprop=\"softwareVersion\">([\\d.]+)</dd>"
