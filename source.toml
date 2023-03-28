@@ -72,11 +72,6 @@ else
 fi
 """
 
-[LinuxReader]
-source = "regex"
-regex = "<span>Ver ([\\d.]+), Win</span>"
-url = "https://www.diskinternals.com/linux-reader/"
-
 [LiveTcpUdpWatch]
 source = "regex"
 regex = "LiveTcpUdpWatch v([\\d.]+)"
