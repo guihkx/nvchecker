@@ -113,7 +113,7 @@ url = "https://raw.githubusercontent.com/MicrosoftDocs/sysinternals/live/sysinte
 [ProcessMonitor]
 source = "regex"
 regex = "Process Monitor v([\\d.]+)"
-url = "https://docs.microsoft.com/en-us/sysinternals/downloads/procmon"
+url = "https://raw.githubusercontent.com/MicrosoftDocs/sysinternals/live/sysinternals/downloads/procmon.md"
 
 [SUMo]
 source = "regex"
