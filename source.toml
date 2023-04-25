@@ -147,7 +147,7 @@ url = "https://www.microsoft.com/en-us/software-download/windows11"
 [WinRAR]
 source = "regex"
 regex = "Version ([\\d.]+)[\\r\\n]"
-url = "https://rarlab.com/rarnew.htm"
+url = "https://www.rarlab.com/rarnew.htm"
 
 [WizTree]
 source = "regex"
