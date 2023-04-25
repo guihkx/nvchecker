@@ -61,16 +61,10 @@ fi
 """
 
 [KeyCastOW]
-# dependencies: coreutils, curl
-source = "cmd"
-cmd = """
-if res=$(curl -fsS 'https://raw.githubusercontent.com/brookhong/KeyCastOW/master/keycastow.rc')
-then
-  echo "${res}" | tr -d '\\0' | grep -oPm1 '"FileVersion" *, *"\\K[^"]+'
-else
-  exit $?
-fi
-"""
+source = "regex"
+encoding = "utf16"
+regex = "\"FileVersion\", \"([\\d.]+)\""
+url = "https://raw.githubusercontent.com/brookhong/KeyCastOW/master/keycastow.rc"
 
 [LiveTcpUdpWatch]
 source = "regex"
