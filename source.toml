@@ -80,8 +80,8 @@ url = "https://www.nvidia.com/en-us/drivers/unix/"
 [NVIDIA_Production]
 # Linux drivers only (Production Branch)
 source = "regex"
-regex = "<td class=\"gridItem\">([\\d.]+)</td>"
-url = "https://www.nvidia.com/Download/processFind.aspx?psid=120&pfid=930&osid=12&lid=1&whql=1&lang=en-us&ctk=0&qnfslb=01"
+regex = "Latest Production Branch Version: <a .+?>([\\d.]+)</a>"
+url = "https://www.nvidia.com/en-us/drivers/unix/"
 
 [NVIDIA_Latest]
 # Linux drivers only (New Feature Branch)
