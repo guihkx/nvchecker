@@ -30,8 +30,8 @@ url = "https://www.techpowerup.com/download/gpu-z/"
 
 [HWiNFO]
 source = "regex"
-regex = "<dd itemprop=\"softwareVersion\">([\\d.]+)</dd>"
-url = "https://www.fosshub.com/HWiNFO.html"
+regex = "HWiNFO v([\\d.]+) released"
+url = "https://www.hwinfo.com/news.xml/"
 
 [HWMonitor]
 source = "regex"
