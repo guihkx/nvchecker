@@ -74,8 +74,8 @@ url = "https://www.nirsoft.net/utils/live_tcp_udp_watch.html"
 [NVIDIA_470]
 # Linux drivers only (R470 Legacy Branch)
 source = "regex"
-regex = "<td class=\"gridItem\">([\\d.]+)</td>"
-url = "https://www.nvidia.com/Download/processFind.aspx?psid=85&pfid=660&osid=12&lid=1&whql=1&lang=en-us&ctk=0&qnfslb=01"
+regex = "Latest Legacy GPU version \\(470\\.xx series\\): <a .+?>([\\d.]+)</a>"
+url = "https://www.nvidia.com/en-us/drivers/unix/"
 
 [NVIDIA_Production]
 # Linux drivers only (Production Branch)
