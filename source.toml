@@ -157,4 +157,4 @@ url = "https://www.diskanalyzer.com/download"
 [X-Ripper]
 source = "regex"
 regex = "\"softwareVersion\">([\\d.]+)"
-url = "http://www.zeus-software.com/downloads/xripper"
+url = "https://www.zeus-software.com/downloads/xripper"
