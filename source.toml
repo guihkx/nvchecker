@@ -25,8 +25,8 @@ url = "https://raw.githubusercontent.com/ExeinfoASL/ASL/master/file_id.diz"
 
 [GPU-Z]
 source = "regex"
-regex = "TechPowerUp GPU-Z v([\\d.]+)"
-url = "https://www.techpowerup.com/download/techpowerup-gpu-z/"
+regex = "<span>[\\s\\t\\n]*v([\\d.]+)[\\s\\t\\n]*</span>"
+url = "https://www.techpowerup.com/download/gpu-z/"
 
 [HWiNFO]
 source = "regex"
