@@ -16,7 +16,7 @@ url = "https://osdn.net/projects/crystaldiskinfo/releases/rss"
 [DisplayDriverUninstaller]
 source = "regex"
 regex = "Display Driver Uninstaller Download version ([\\d.]+)"
-url = "https://www.guru3d.com/files-get/display-driver-uninstaller-download,1.html"
+url = "https://www.guru3d.com/files_rss"
 
 [ExeInfoPE]
 source = "regex"
