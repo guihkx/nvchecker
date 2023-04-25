@@ -152,7 +152,7 @@ url = "https://www.rarlab.com/rarnew.htm"
 [WizTree]
 source = "regex"
 regex = ">V&nbsp;([\\d.]+)&nbsp;"
-url = "https://wiztreefree.com/download"
+url = "https://www.diskanalyzer.com/download"
 
 [X-Ripper]
 source = "regex"
