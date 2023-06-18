@@ -6,7 +6,7 @@ keyfile = "keys.toml"
 [Autoruns]
 source = "regex"
 regex = "Autoruns for Windows v([\\d.]+)"
-url = "https://raw.githubusercontent.com/MicrosoftDocs/sysinternals/live/sysinternals/downloads/autoruns.md"
+url = "https://raw.githubudsercontent.com/MicrosoftDocs/sysinternals/live/sysinternals/downloads/autoruns.md"
 
 [CrystalDiskInfo]
 source = "regex"
