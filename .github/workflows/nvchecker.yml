@@ -85,10 +85,10 @@ jobs:
           outdated_entries_json='[]'
           failing_entries_json='[]'
           # FIXME: Optimize this.
-          for entry in $(yq -r '.[] | key' '${{ steps.vars.outputs.oldver }}')
+          for entry in $(yq -r '.[] | key' -o json '${{ steps.vars.outputs.oldver }}')
           do
-            oldver=$(yq -r $".[\"${entry}\"]" '${{ steps.vars.outputs.oldver }}')
-            newver=$(yq -r $".[\"${entry}\"] // \"\"" '${{ steps.vars.outputs.newver }}')
+            oldver=$(yq -r $".[\"${entry}\"]" -o json '${{ steps.vars.outputs.oldver }}')
+            newver=$(yq -r $".[\"${entry}\"] // \"\"" -o json '${{ steps.vars.outputs.newver }}')
             if [ -z "${newver}" ]
             then
               failing_entries_json=$(yq -r $". += \"${entry}\" | @json" <<< "${failing_entries_json}")
@@ -150,10 +150,10 @@ jobs:
           git checkout -b "${branch}"
           for entry in $(yq -r '.[]' <<< '${{ steps.results.outputs.outdated_entries_json }}')
           do
-            oldver=$(yq -r $".[\"${entry}\"]" '${{ steps.vars.outputs.oldver }}')
-            newver=$(yq -r $".[\"${entry}\"]" '${{ steps.vars.outputs.newver }}~')
-            yq -i $".[\"${entry}\"] = \"${newver}\"" '${{ steps.vars.outputs.oldver }}'
-            yq -i $".[\"${entry}\"] = \"${newver}\"" '${{ steps.vars.outputs.newver }}'
+            oldver=$(yq -r $".[\"${entry}\"]" -o json '${{ steps.vars.outputs.oldver }}')
+            newver=$(yq -r $".[\"${entry}\"]" -o json '${{ steps.vars.outputs.newver }}~')
+            yq -i $".[\"${entry}\"] = \"${newver}\"" -o json '${{ steps.vars.outputs.oldver }}'
+            yq -i $".[\"${entry}\"] = \"${newver}\"" -o json '${{ steps.vars.outputs.newver }}'
             git add '${{ steps.vars.outputs.oldver }}' '${{ steps.vars.outputs.newver }}'
             git commit -m "nvchecker: ${entry} ${oldver} -> ${newver}"
             pr_body+=$"- ${entry}: \`${oldver}\` -> \`${newver}\`\n"
