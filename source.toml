@@ -10,8 +10,8 @@ url = "https://raw.githubusercontent.com/MicrosoftDocs/sysinternals/live/sysinte
 
 [CrystalDiskInfo]
 source = "regex"
-regex = "<title>CrystalDiskInfo - ([\\d.]+)</title>"
-url = "https://osdn.net/projects/crystaldiskinfo/releases/rss"
+regex = "CrystalDiskInfo ([\\d.]+)"
+url = "https://crystalmark.info/en/download/"
 
 [DisplayDriverUninstaller]
 source = "regex"
