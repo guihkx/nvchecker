@@ -16,7 +16,7 @@ url = "https://crystalmark.info/en/download/"
 [DisplayDriverUninstaller]
 source = "regex"
 regex = "Display Driver Uninstaller Download version ([\\d.]+)"
-url = "https://www.guru3d.com/files_rss"
+url = "https://www.guru3d.com/files-details/display-driver-uninstaller-download.html"
 
 [ExeInfoPE]
 source = "regex"
