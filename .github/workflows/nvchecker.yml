@@ -70,7 +70,7 @@ jobs:
         shell: 'script -q -O /dev/null -e -c "bash {0}"'
         env:
           TERM: xterm-256color
-        run: nvchecker --file '${{ env.NVCHECKER_SOURCES_FILE }}' --tries 5
+        run: nvchecker --file '${{ env.NVCHECKER_SOURCES_FILE }}' --logging debug --tries 5
 
       - name: Determine if there are updates
         id: results
