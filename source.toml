@@ -75,24 +75,24 @@ url = "https://www.nirsoft.net/utils/live_tcp_udp_watch.html"
 # Linux drivers only (R470 Legacy Branch)
 source = "regex"
 regex = "Latest Legacy GPU version \\(470\\.xx series\\): <a .+?>([\\d.]+)</a>"
-url = "https://www.nvidia.com/en-us/drivers/unix/"
+url = "https://www.nvidia.com/en-us/drivers/unix/?nocache"
 
 [NVIDIA_Production]
 # Linux drivers only (Production Branch)
 source = "regex"
 regex = "Latest Production Branch Version: <a .+?>([\\d.]+)</a>"
-url = "https://www.nvidia.com/en-us/drivers/unix/"
+url = "https://www.nvidia.com/en-us/drivers/unix/?nocache"
 
 [NVIDIA_Latest]
 # Linux drivers only (New Feature Branch)
 source = "regex"
 regex = "Latest New Feature Branch Version: <a .+?>[\\s\\t]*([\\d.]+)</a>"
-url = "https://www.nvidia.com/en-us/drivers/unix/"
+url = "https://www.nvidia.com/en-us/drivers/unix/?nocache"
 
 [NVIDIA_Beta]
 source = "regex"
 regex = "Latest Beta Version: <a .+?>([\\d.]+)</a>"
-url = "https://www.nvidia.com/en-us/drivers/unix/"
+url = "https://www.nvidia.com/en-us/drivers/unix/?nocache"
 
 [NVIDIA_Vulkan]
 source = "regex"
