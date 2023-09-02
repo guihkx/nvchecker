@@ -38,6 +38,11 @@ source = "regex"
 regex = "Version ([\\d.]+) for windows"
 url = "https://www.cpuid.com/softwares/hwmonitor.html"
 
+[IRPF_2023]
+source = "regex"
+regex = "/arquivos/IRPF2023-([\\d.]+)\\.zip"
+url = "https://www.gov.br/receitafederal/pt-br/centrais-de-conteudo/download/pgd/dirpf"
+
 [IRPF_2022]
 source = "regex"
 regex = "/arquivos/IRPF2022-([\\d.]+)\\.zip"
