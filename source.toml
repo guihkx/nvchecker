@@ -43,7 +43,7 @@ source = "regex"
 regex = "/arquivos/IRPF([\\d]+-[\\d.]+)\\.zip"
 url = "https://www.gov.br/receitafederal/pt-br/centrais-de-conteudo/download/pgd/dirpf"
 
-[IRPF_XMLs]
+[IRPF_2023_XMLs]
 # dependencies: coreutils, curl, xmlstarlet
 source = "cmd"
 cmd = """
