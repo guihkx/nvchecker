@@ -38,11 +38,6 @@ source = "regex"
 regex = "Version ([\\d.]+) for windows"
 url = "https://www.cpuid.com/softwares/hwmonitor.html"
 
-[IRPF]
-source = "regex"
-regex = "/arquivos/IRPF([\\d]+-[\\d.]+)\\.zip"
-url = "https://www.gov.br/receitafederal/pt-br/centrais-de-conteudo/download/pgd/dirpf"
-
 [IRPF_2022_XMLs]
 # dependencies: coreutils, curl, xmlstarlet
 source = "cmd"
@@ -76,6 +71,11 @@ else
   exit $?
 fi
 """
+
+[IRPF_Latest]
+source = "regex"
+regex = "/arquivos/IRPF([\\d]+-[\\d.]+)\\.zip"
+url = "https://www.gov.br/receitafederal/pt-br/centrais-de-conteudo/download/pgd/dirpf"
 
 [KeyCastOW]
 source = "regex"
