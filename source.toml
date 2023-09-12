@@ -137,11 +137,6 @@ source = "regex"
 regex = "Process Monitor v([\\d.]+)"
 url = "https://raw.githubusercontent.com/MicrosoftDocs/sysinternals/live/sysinternals/downloads/procmon.md"
 
-[SUMo]
-source = "regex"
-regex = "<h3>SUMo</h3>[\\r\\n\\s]*?<small>Version : <code>([\\d.]+)</code>"
-url = "https://www.kcsoftwares.com/?download"
-
 [TeamViewerLinux]
 source = "httpheader"
 regex = "teamviewer_([0-9.]+)_amd64\\.deb$"
