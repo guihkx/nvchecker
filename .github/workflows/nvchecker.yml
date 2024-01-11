@@ -24,7 +24,7 @@ jobs:
         run: |
           sudo apt install libcurl4-openssl-dev
           # Install it via pip because Ubuntu 22.04 currently only offers v2.5 through its repositories.
-          pip3 install nvchecker==2.12
+          pip3 install nvchecker
 
       - name: Install yq
         run: |
