@@ -33,7 +33,7 @@ jobs:
           chmod +x /usr/local/bin/yq
 
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # TODO: Remove '-o json' once yq adds proper write support for TOML files.
       - name: Set up variables
