@@ -11,7 +11,7 @@ env:
 jobs:
   main:
     name: Check
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
       # xmlstarlet: needed for the IRPF_XMLs source
@@ -67,7 +67,7 @@ jobs:
 
       - name: Run nvchecker
         # We're only using to get nice colors in output
-        shell: 'script -q -O /dev/null -e -c "bash {0}"'
+        shell: 'script -q -e -c "bash {0}"'
         env:
           TERM: xterm-256color
         run: nvchecker --file '${{ env.NVCHECKER_SOURCES_FILE }}' --tries 5
