@@ -178,8 +178,3 @@ url = "https://www.rarlab.com/rarnew.htm"
 source = "regex"
 regex = ">V&nbsp;([\\d.]+)&nbsp;"
 url = "https://www.diskanalyzer.com/download"
-
-[X-Ripper]
-source = "regex"
-regex = "\"softwareVersion\">([\\d.]+)"
-url = "https://www.zeus-software.com/downloads/xripper"
