@@ -30,8 +30,8 @@ url = "https://www.techpowerup.com/download/gpu-z/"
 
 [HWiNFO]
 source = "regex"
-regex = "HWiNFO v([\\d.]+) released"
-url = "https://www.hwinfo.com/news.xml/"
+regex = "(?:\\r\\n){2}HW64UPD:([\\d.]+)"
+url = "https://www.hwinfo.com/ver.txt"
 
 [HWMonitor]
 source = "regex"
