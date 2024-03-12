@@ -87,6 +87,23 @@ source = "regex"
 regex = "<pkgver>([\\d.]+)</pkgver>"
 url = "https://downloadirpf.receita.fazenda.gov.br/irpf/2024/irpf/update/latest.xml"
 
+[IRPF_2024_XMLs]
+# dependencies: coreutils, curl, xmlstarlet
+source = "cmd"
+cmd = """
+if res=$(curl -fsS 'https://downloadirpf.receita.fazenda.gov.br/irpf/2024/irpf/update/latest.xml')
+then
+  if xml=$(echo "${res}" | xmlstarlet sel -B -t -c '//information/extra/files')
+  then
+    echo -n "${xml}" | sha256sum | head -c 8
+  else
+    exit $?
+  fi
+else
+  exit $?
+fi
+"""
+
 [IRPF_Latest]
 source = "regex"
 regex = "/arquivos/IRPF([\\d]+-[\\d.]+)\\.zip"
