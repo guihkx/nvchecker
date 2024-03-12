@@ -43,11 +43,6 @@ source = "regex"
 regex = "<pkgver>([\\d.]+)</pkgver>"
 url = "https://downloadirpf.receita.fazenda.gov.br/irpf/2022/irpf/update/latest.xml"
 
-[IRPF_2023]
-source = "regex"
-regex = "<pkgver>([\\d.]+)</pkgver>"
-url = "https://downloadirpf.receita.fazenda.gov.br/irpf/2023/irpf/update/latest.xml"
-
 [IRPF_2022_XMLs]
 # dependencies: coreutils, curl, xmlstarlet
 source = "cmd"
@@ -65,6 +60,11 @@ else
 fi
 """
 
+[IRPF_2023]
+source = "regex"
+regex = "<pkgver>([\\d.]+)</pkgver>"
+url = "https://downloadirpf.receita.fazenda.gov.br/irpf/2023/irpf/update/latest.xml"
+
 [IRPF_2023_XMLs]
 # dependencies: coreutils, curl, xmlstarlet
 source = "cmd"
@@ -81,6 +81,11 @@ else
   exit $?
 fi
 """
+
+[IRPF_2024]
+source = "regex"
+regex = "<pkgver>([\\d.]+)</pkgver>"
+url = "https://downloadirpf.receita.fazenda.gov.br/irpf/2024/irpf/update/latest.xml"
 
 [IRPF_Latest]
 source = "regex"
