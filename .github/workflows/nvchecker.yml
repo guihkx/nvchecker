@@ -114,7 +114,7 @@ jobs:
           git_email=$(git config user.email)
 
           # Check if there is a PR already opened by 'us'. If there is, abort with no error.
-          n_prs=$(curl --fail \
+          if ! res=$(curl --fail \
             --silent \
             --show-error \
             --location \
@@ -124,8 +124,13 @@ jobs:
             --header 'Accept: application/vnd.github+json' \
             --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
             --header 'X-GitHub-Api-Version: 2022-11-28' \
-            https://api.github.com/repos/${{ github.repository }}/pulls |
-            yq -r $"[.[].user.login | select(. == \"${git_username}\")] | length")
+            https://api.github.com/repos/${{ github.repository }}/pulls)
+          then
+            echo '::error::Failed to check for open pull requests using the GitHub API.'
+            exit 1
+          fi
+
+          n_prs=$(yq -r $"[.[].user.login | select(. == \"${git_username}\")] | length" <<< "${res}")
 
           if [ "${n_prs}" -gt 0 ]
           then
@@ -167,7 +172,7 @@ jobs:
             pr_title=$"nvchecker: ${entry} \`${oldver}\` -> \`${newver}\`"
           fi
 
-          pr=$(curl --fail \
+          if ! curl --fail \
             --silent \
             --show-error \
             --location \
@@ -176,14 +181,14 @@ jobs:
             --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
             --header 'X-GitHub-Api-Version: 2022-11-28' \
             --data $"{\"title\":\"${pr_title}\",\"body\":\"${pr_body}\",\"head\":\"${{ github.actor }}:${branch}\",\"base\":\"${{ github.head_ref || github.ref_name }}\"}" \
-            https://api.github.com/repos/${{ github.repository }}/pulls)
-
-          # Delete created branch if opening the PR fails.
-          if [ $? -ne 0 ]
+            https://api.github.com/repos/${{ github.repository }}/pulls
           then
-            echo '::warning::Unable to create pull request!'
+            echo '::error::Failed to create a pull request using the GitHub API.'
+            # Delete created branch.
             git push origin ":${branch}"
+            exit 1
           fi
+          echo '::notice::A pull request for outdated entries was created successfully!'
 
       - name: Create issue for failing entries
         if: steps.results.outputs.failing_entries_total > 0
@@ -193,7 +198,7 @@ jobs:
           git_username=$(git config user.name)
 
           # Check if there is an issue already opened by 'us'. If there is, abort with no error.
-          n_issues=$(curl --fail \
+          if ! res=$(curl --fail \
             --silent \
             --show-error \
             --location \
@@ -203,8 +208,13 @@ jobs:
             --header 'Accept: application/vnd.github+json' \
             --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
             --header 'X-GitHub-Api-Version: 2022-11-28' \
-            https://api.github.com/repos/${{ github.repository }}/issues |
-            yq -r $"[.[] | select(.user.login == \"${git_username}\" and .node_id == \"I_*\")] | length")
+            https://api.github.com/repos/${{ github.repository }}/issues)
+          then
+            echo '::error::Failed to check for open issues using the GitHub API.'
+            exit 1
+          fi
+
+          n_issues=$(yq -r $"[.[] | select(.user.login == \"${git_username}\" and .node_id == \"I_*\")] | length" <<< "${res}")
 
           if [ "${n_issues}" -gt 0 ]
           then
@@ -234,7 +244,7 @@ jobs:
             issue_title=$"nvchecker: The \`${entry}\` entry is failing"
           fi
 
-          issue=$(curl --fail \
+          if ! curl --fail \
             --silent \
             --show-error \
             --location \
@@ -243,4 +253,9 @@ jobs:
             --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
             --header 'X-GitHub-Api-Version: 2022-11-28' \
             --data $"{\"title\":\"${issue_title}\",\"body\":\"${issue_body}\"}" \
-            https://api.github.com/repos/${{ github.repository }}/issues)
+            https://api.github.com/repos/${{ github.repository }}/issues
+          then
+            echo '::error::Failed to open an issue for failing entries using the GitHub API.'
+            exit 1
+          fi
+          echo '::warning::An issue for failing entries was opened successfully!'
