@@ -14,17 +14,6 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-      # xmlstarlet: needed for the IRPF_XMLs source
-      - name: Install source dependencies
-        run: |
-          sudo apt update
-          sudo apt install xmlstarlet
-
-      - name: Install nvchecker
-        run: |
-          sudo apt install libcurl4-openssl-dev
-          pip3 install nvchecker~=2.14.1
-
       - name: Install yq
         run: |
           curl --fail --location --retry 5 --output /usr/local/bin/yq \
@@ -62,11 +51,14 @@ jobs:
             echo '::warning::GitHub Secret for GitHub API key is not set up!'
           fi
 
+      - name: Pull nvchecker container
+        run: docker pull ghcr.io/guihkx/nvchecker
+
       - name: Run nvchecker
         shell: 'script -q -e -c "bash {0}"' # We're only using this ugly thing to get colored output
         env:
           TERM: xterm-256color
-        run: nvchecker --file '${{ env.NVCHECKER_SOURCES_FILE }}' --tries 5
+        run: docker run -v .:/data ghcr.io/guihkx/nvchecker --file '${{ env.NVCHECKER_SOURCES_FILE }}' --tries 5
 
       - name: Determine if there are updates
         id: results
