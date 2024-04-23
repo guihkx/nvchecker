@@ -23,8 +23,7 @@ jobs:
       - name: Install nvchecker
         run: |
           sudo apt install libcurl4-openssl-dev
-          # Install it via pip because Ubuntu 22.04 currently only offers v2.5 through its repositories.
-          pip3 install nvchecker==2.13
+          pip3 install nvchecker~=2.14.1
 
       - name: Install yq
         run: |
@@ -79,25 +78,26 @@ jobs:
             echo '::notice::No updates were found.'
             exit 0
           fi
-          outdated_entries_json='[]'
-          failing_entries_json='[]'
-          # FIXME: Optimize this.
-          for entry in $(yq -r '.[] | key' -o json '${{ steps.vars.outputs.oldver }}')
+          declare -A old_entries
+          eval "$(yq -r $".data[] | \"old_entries['\(key)']='\(.version)'\"" '${{ steps.vars.outputs.oldver }}')"
+          declare -A new_entries
+          eval "$(yq -r $".data[] | \"new_entries['\(key)']='\(.version)'\"" '${{ steps.vars.outputs.newver }}')"
+          outdated_entries=()
+          failing_entries=()
+          for entry in "${!old_entries[@]}"
           do
-            oldver=$(yq -r $".[\"${entry}\"]" -o json '${{ steps.vars.outputs.oldver }}')
-            newver=$(yq -r $".[\"${entry}\"] // \"\"" -o json '${{ steps.vars.outputs.newver }}')
-            if [ -z "${newver}" ]
+            if [ -z "${new_entries[$entry]}" ]
             then
-              failing_entries_json=$(yq -r $". += \"${entry}\" | @json" <<< "${failing_entries_json}")
-            elif [ "${oldver}" != "${newver}" ]
+              failing_entries+=("${entry}")
+            elif [ "${old_entries[$entry]}" != "${new_entries[$entry]}" ]
             then
-              outdated_entries_json=$(yq -r $". += \"${entry}\" | @json" <<< "${outdated_entries_json}")
+              outdated_entries+=("${entry}")
             fi
           done
-          echo "failing_entries_json=${failing_entries_json}" >> "${GITHUB_OUTPUT}"
-          echo "failing_entries_total=$(yq length <<< ${failing_entries_json})" >> "${GITHUB_OUTPUT}"
-          echo "outdated_entries_json=${outdated_entries_json}" >> "${GITHUB_OUTPUT}"
-          echo "outdated_entries_total=$(yq length <<< ${outdated_entries_json})" >> "${GITHUB_OUTPUT}"
+          echo "failing_entries_json=$(jq -cn '$ARGS.positional' --args -- "${failing_entries[@]}")" >> "${GITHUB_OUTPUT}"
+          echo "failing_entries_total=${#failing_entries[@]}" >> "${GITHUB_OUTPUT}"
+          echo "outdated_entries_json=$(jq -cn '$ARGS.positional' --args -- "${outdated_entries[@]}")" >> "${GITHUB_OUTPUT}"
+          echo "outdated_entries_total=${#outdated_entries[@]}" >> "${GITHUB_OUTPUT}"
 
       - name: Configure git
         if: steps.results.outputs.outdated_entries_total > 0 || steps.results.outputs.failing_entries_total > 0
@@ -152,10 +152,10 @@ jobs:
           git checkout -b "${branch}"
           for entry in $(yq -r '.[]' <<< '${{ steps.results.outputs.outdated_entries_json }}')
           do
-            oldver=$(yq -r $".[\"${entry}\"]" '${{ steps.vars.outputs.oldver }}')
-            newver=$(yq -r $".[\"${entry}\"]" '${{ steps.vars.outputs.newver }}~')
-            yq -i $".[\"${entry}\"] = \"${newver}\"" '${{ steps.vars.outputs.oldver }}'
-            yq -i $".[\"${entry}\"] = \"${newver}\"" '${{ steps.vars.outputs.newver }}'
+            oldver=$(yq -r $".data.[\"${entry}\"].version" '${{ steps.vars.outputs.oldver }}')
+            newver=$(yq -r $".data.[\"${entry}\"].version" '${{ steps.vars.outputs.newver }}~')
+            yq -i $".data.[\"${entry}\"].version = \"${newver}\"" '${{ steps.vars.outputs.oldver }}'
+            yq -i $".data.[\"${entry}\"].version = \"${newver}\"" '${{ steps.vars.outputs.newver }}'
             git add '${{ steps.vars.outputs.oldver }}' '${{ steps.vars.outputs.newver }}'
             git commit -m "nvchecker: ${entry} ${oldver} -> ${newver}"
             pr_body+=$"- ${entry}: \`${oldver}\` -> \`${newver}\`\n"
