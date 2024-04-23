@@ -52,7 +52,7 @@ jobs:
           set -e
           if [ -n '${{ steps.vars.outputs.keyfile }}' ] && [ -f '${{ steps.vars.outputs.keyfile }}' ]
           then
-            echo 'WARNING: nvchecker key file already resides in this repository!'
+            echo '::warning::A nvchecker key file already resides in this repository!'
             exit 0
           fi
           echo '[keys]' > '${{ steps.vars.outputs.keyfile }}'
@@ -62,7 +62,7 @@ jobs:
             echo 'github = "${{ secrets.API_KEY_GITHUB }}"' >> '${{ steps.vars.outputs.keyfile }}'
             echo 'Added GitHub API key to nvchecker key file.'
           else
-            echo 'WARNING: GitHub Secret for GitHub API key is not set up!'
+            echo '::warning::GitHub Secret for GitHub API key is not set up!'
           fi
 
       - name: Run nvchecker
@@ -79,7 +79,7 @@ jobs:
           set -e
           if cmp -s '${{ steps.vars.outputs.oldver }}' '${{ steps.vars.outputs.newver }}'
           then
-            echo 'No updates were found.'
+            echo '::notice::No updates were found.'
             exit 0
           fi
           outdated_entries_json='[]'
@@ -132,7 +132,7 @@ jobs:
 
           if [ "${n_prs}" -gt 0 ]
           then
-            echo 'WARNING: A pull request is already open, refusing to open a new one.'
+            echo '::warning::A pull request is already open, refusing to open a new one.'
             exit 0
           fi
 
@@ -184,6 +184,7 @@ jobs:
           # Delete created branch if opening the PR fails.
           if [ $? -ne 0 ]
           then
+            echo '::warning::Unable to create pull request!'
             git push origin ":${branch}"
           fi
 
@@ -210,7 +211,7 @@ jobs:
 
           if [ "${n_issues}" -gt 0 ]
           then
-            echo 'WARNING: An issue is already open, refusing to open a new one.'
+            echo '::warning::An issue is already open, refusing to open a new one.'
             exit 0
           fi
 
