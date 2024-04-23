@@ -35,17 +35,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # TODO: Remove '-o json' once yq adds proper write support for TOML files.
       - name: Set up variables
         id: vars
         run: |
          set -x
          set -e
-         echo "keyfile=$(yq -r '.__config__.keyfile' -o json '${{ env.NVCHECKER_SOURCES_FILE }}')" >> "${GITHUB_OUTPUT}"
-         echo "newver=$(yq -r '.__config__.newver' -o json '${{ env.NVCHECKER_SOURCES_FILE }}')" >> "${GITHUB_OUTPUT}"
-         echo "oldver=$(yq -r '.__config__.oldver' -o json '${{ env.NVCHECKER_SOURCES_FILE }}')" >> "${GITHUB_OUTPUT}"
+         echo "keyfile=$(yq -r '.__config__.keyfile' '${{ env.NVCHECKER_SOURCES_FILE }}')" >> "${GITHUB_OUTPUT}"
+         echo "newver=$(yq -r '.__config__.newver' '${{ env.NVCHECKER_SOURCES_FILE }}')" >> "${GITHUB_OUTPUT}"
+         echo "oldver=$(yq -r '.__config__.oldver' '${{ env.NVCHECKER_SOURCES_FILE }}')" >> "${GITHUB_OUTPUT}"
 
-      # TODO: Once yq adds write support for TOML files, use it instead of creating the keys file by hand using 'echo'.
       - name: Set up keys file
         run: |
           set -x
@@ -66,8 +64,7 @@ jobs:
           fi
 
       - name: Run nvchecker
-        # We're only using to get nice colors in output
-        shell: 'script -q -e -c "bash {0}"'
+        shell: 'script -q -e -c "bash {0}"' # We're only using this ugly thing to get colored output
         env:
           TERM: xterm-256color
         run: nvchecker --file '${{ env.NVCHECKER_SOURCES_FILE }}' --tries 5
@@ -150,10 +147,10 @@ jobs:
           git checkout -b "${branch}"
           for entry in $(yq -r '.[]' <<< '${{ steps.results.outputs.outdated_entries_json }}')
           do
-            oldver=$(yq -r $".[\"${entry}\"]" -o json '${{ steps.vars.outputs.oldver }}')
-            newver=$(yq -r $".[\"${entry}\"]" -o json '${{ steps.vars.outputs.newver }}~')
-            yq -i $".[\"${entry}\"] = \"${newver}\"" -o json '${{ steps.vars.outputs.oldver }}'
-            yq -i $".[\"${entry}\"] = \"${newver}\"" -o json '${{ steps.vars.outputs.newver }}'
+            oldver=$(yq -r $".[\"${entry}\"]" '${{ steps.vars.outputs.oldver }}')
+            newver=$(yq -r $".[\"${entry}\"]" '${{ steps.vars.outputs.newver }}~')
+            yq -i $".[\"${entry}\"] = \"${newver}\"" '${{ steps.vars.outputs.oldver }}'
+            yq -i $".[\"${entry}\"] = \"${newver}\"" '${{ steps.vars.outputs.newver }}'
             git add '${{ steps.vars.outputs.oldver }}' '${{ steps.vars.outputs.newver }}'
             git commit -m "nvchecker: ${entry} ${oldver} -> ${newver}"
             pr_body+=$"- ${entry}: \`${oldver}\` -> \`${newver}\`\n"
