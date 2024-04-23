@@ -1,33 +1,95 @@
 {
-  "Autoruns": "14.11",
-  "CrystalDiskInfo": "9.2.3",
-  "DisplayDriverUninstaller": "18.0.7.6",
-  "ExeInfoPE": "0.0.8.3",
-  "GPU-Z": "2.59.0",
-  "HWMonitor": "1.53",
-  "HWiNFO": "8.00",
-  "IRPF_2022": "1.9",
-  "IRPF_2022_XMLs": "4c1e71fa",
-  "IRPF_2023": "1.5",
-  "IRPF_2023_XMLs": "61850df0",
-  "IRPF_2024": "1.1",
-  "IRPF_2024_XMLs": "f13d648e",
-  "IRPF_Latest": "2024-1.1",
-  "KeyCastOW": "2.0.2.5",
-  "LiveTcpUdpWatch": "1.51",
-  "NVIDIA_470": "470.239.06",
-  "NVIDIA_Beta": "550.40.07",
-  "NVIDIA_Latest": "545.29.06",
-  "NVIDIA_Production": "550.76",
-  "NVIDIA_Vulkan": "550.40.59",
-  "ProcessExplorer": "17.05",
-  "ProcessMonitor": "3.96",
-  "TeamViewerLinux": "15.52.3",
-  "USBDeview": "3.07",
-  "UnifiedRemoteServer": "3.13.0.2505",
-  "WinRAR": "7.00",
-  "Windows10": "22H2",
-  "Windows11": "23H2",
-  "WizTree": "4.19",
-  "vibranceGUI": "2.3.1.1"
+  "version": 2,
+  "data": {
+    "Autoruns": {
+      "version": "14.11"
+    },
+    "CrystalDiskInfo": {
+      "version": "9.2.3"
+    },
+    "DisplayDriverUninstaller": {
+      "version": "18.0.7.6"
+    },
+    "ExeInfoPE": {
+      "version": "0.0.8.3"
+    },
+    "GPU-Z": {
+      "version": "2.59.0"
+    },
+    "HWiNFO": {
+      "version": "8.00"
+    },
+    "IRPF_2022": {
+      "version": "1.9"
+    },
+    "IRPF_2022_XMLs": {
+      "version": "4c1e71fa"
+    },
+    "IRPF_2023": {
+      "version": "1.5"
+    },
+    "IRPF_2023_XMLs": {
+      "version": "61850df0"
+    },
+    "IRPF_2024": {
+      "version": "1.1"
+    },
+    "IRPF_2024_XMLs": {
+      "version": "f13d648e"
+    },
+    "IRPF_Latest": {
+      "version": "2024-1.1"
+    },
+    "KeyCastOW": {
+      "version": "2.0.2.5"
+    },
+    "LiveTcpUdpWatch": {
+      "version": "1.51"
+    },
+    "NVIDIA_470": {
+      "version": "470.239.06"
+    },
+    "NVIDIA_Beta": {
+      "version": "550.40.07"
+    },
+    "NVIDIA_Latest": {
+      "version": "545.29.06"
+    },
+    "NVIDIA_Production": {
+      "version": "550.76"
+    },
+    "NVIDIA_Vulkan": {
+      "version": "550.40.59"
+    },
+    "ProcessExplorer": {
+      "version": "17.05"
+    },
+    "ProcessMonitor": {
+      "version": "3.96"
+    },
+    "TeamViewerLinux": {
+      "version": "15.52.3"
+    },
+    "USBDeview": {
+      "version": "3.07"
+    },
+    "UnifiedRemoteServer": {
+      "version": "3.13.0.2505"
+    },
+    "WinRAR": {
+      "version": "7.00"
+    },
+    "Windows10": {
+      "version": "22H2"
+    },
+    "Windows11": {
+      "version": "23H2"
+    },
+    "WizTree": {
+      "version": "4.19"
+    },
+    "vibranceGUI": {
+      "version": "2.3.1.1"
+    }
+  }
 }
