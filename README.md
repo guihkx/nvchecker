@@ -26,7 +26,7 @@ Check out the [nvchecker documentation](https://nvchecker.readthedocs.io/en/late
 ## Using the Docker image
 
 ```sh
-docker run -v .:/data -t ghcr.io/guihkx/nvchecker --file source.toml
+docker run --rm -v .:/data -t ghcr.io/guihkx/nvchecker --file source.toml
 ```
 
 ## Enabling the systemd timer
