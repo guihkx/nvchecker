@@ -55,6 +55,9 @@ jobs:
         run: docker pull ghcr.io/guihkx/nvchecker
 
       - name: Run nvchecker
+        shell: 'script -q -e -c "bash {0}"' # We're only using this ugly thing to get colored output
+        env:
+          TERM: xterm-256color
         run: docker run -v .:/data -it ghcr.io/guihkx/nvchecker --file '${{ env.NVCHECKER_SOURCES_FILE }}' --tries 5
 
       - name: Determine if there are updates
