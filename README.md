@@ -23,6 +23,12 @@ Check out the [nvchecker documentation](https://nvchecker.readthedocs.io/en/late
     github = "YOUR GITHUB TOKEN HERE"
     ```
 
+## Using the Docker image
+
+```sh
+docker run -v .:/data -t ghcr.io/guihkx/nvchecker --file source.toml
+```
+
 ## Enabling the systemd timer
 
 The systemd timer/service is useful to automatically check for new app updates. By default, I have set the timer to run every hour, but that's [configurable](https://www.freedesktop.org/software/systemd/man/systemd.time.html).
