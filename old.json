@@ -94,5 +94,6 @@
     "vibranceGUI": {
       "version": "2.3.1.1"
     }
-  }
+  },
+  "HWMonitor": "null"
 }
