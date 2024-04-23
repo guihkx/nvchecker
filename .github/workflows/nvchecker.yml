@@ -55,7 +55,7 @@ jobs:
         run: docker pull ghcr.io/guihkx/nvchecker
 
       - name: Run nvchecker
-        run: docker run -v .:/data -t ghcr.io/guihkx/nvchecker --file '${{ env.NVCHECKER_SOURCES_FILE }}' --tries 5
+        run: docker run --rm -v .:/data -t ghcr.io/guihkx/nvchecker --file '${{ env.NVCHECKER_SOURCES_FILE }}' --tries 5
 
       - name: Determine if there are updates
         id: results
