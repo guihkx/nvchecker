@@ -5,7 +5,7 @@
 * [nvchecker](https://github.com/lilydjwg/nvchecker) (>= 2.14)
 * Config-specific (most of them are probably already installed): `coreutils`, `curl`, `grep`
 
-## `source.toml`
+## `sources.toml`
 
 This is the "main" nvchecker-related file you'll need to modify. It has a lot of apps that are interesting to me, so you'll most likely remove most of them. But feel free to use them as source of "inspiration" to write your own configs! :)
 

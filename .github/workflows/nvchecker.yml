@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  NVCHECKER_SOURCES_FILE: 'source.toml'
+  NVCHECKER_SOURCES_FILE: 'sources.toml'
 
 jobs:
   main:
