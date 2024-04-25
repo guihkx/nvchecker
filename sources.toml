@@ -201,6 +201,6 @@ regex = "Version ([\\d.]+)[\\r\\n]"
 url = "https://www.rarlab.com/rarnew.htm"
 
 [WizTree]
-source = "regex"
-regex = ">V&nbsp;([\\d.]+)&nbsp;"
-url = "https://www.diskanalyzer.com/download"
+source = 'regex'
+regex = 'VERSION=([\d.]+)'
+url = 'https://antibody-software.com/files/wiztreeversion.php'
