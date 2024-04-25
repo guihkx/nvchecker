@@ -3,7 +3,7 @@
 ## Dependencies
 
 * [nvchecker](https://github.com/lilydjwg/nvchecker) (>= 2.14)
-* Config-specific (most of them are probably already installed): `coreutils`, `curl`, `xmlstarlet`
+* Entry-specific: `coreutils`, `curl`, `jq` (and [Python bindings for jq](https://pypi.org/project/jq/)), `xmlstarlet`
 
 ## `sources.toml`
 

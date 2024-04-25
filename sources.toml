@@ -24,9 +24,11 @@ regex = "Version[\\s\\t]*:[\\s\\t]*([\\d.]+)"
 url = "https://raw.githubusercontent.com/ExeinfoASL/ASL/master/file_id.diz"
 
 [GPU-Z]
-source = "regex"
-regex = "<span>[\\s\\t\\n]*v([\\d.]+)[\\s\\t\\n]*</span>"
-url = "https://www.techpowerup.com/download/gpu-z/"
+# dependencies: jq (and Python bindings for jq: https://pypi.org/project/jq/)
+source = 'jq'
+filter = '.latest'
+include_regex = '^[\d.]+$'
+url = 'https://www.gpu-z.com/gpuz/version_v2'
 
 [HWiNFO]
 source = "regex"
