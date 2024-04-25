@@ -14,9 +14,9 @@ regex = "CrystalDiskInfo ([\\d.]+)"
 url = "https://crystalmark.info/en/download/"
 
 [DisplayDriverUninstaller]
-source = "regex"
-regex = "Display Driver Uninstaller \\(DDU\\) download version ([\\d.]+)"
-url = "https://www.guru3d.com/download/display-driver-uninstaller-download"
+source = 'regex'
+regex = '^([\d.]+)$'
+url = 'https://www.wagnardsoft.com/DDU/currentversion2.txt'
 
 [ExeInfoPE]
 source = "regex"
