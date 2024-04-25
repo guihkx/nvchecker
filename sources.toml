@@ -132,10 +132,9 @@ url = "https://www.nvidia.com/en-us/drivers/unix/"
 
 [NVIDIA_Production]
 # Linux drivers only (Production Branch)
-source = "regex"
-regex = "Latest Production Branch Version: <a .+?>([\\d.]+)</a>"
-url = "https://www.nvidia.com/en-us/drivers/unix/"
-ignored = "535.43.02 535.54.03 535.86.05" # 2023-08-12: NVIDIA's website randomly presents an outdated cached version of their page, which incorrectly lists this old driver version as the latest one.
+source = 'regex'
+regex = 'Latest Production Branch Version: <a .+?>([\d.]+)</a>'
+url = 'https://www.nvidia.com/en-us/drivers/unix/'
 
 [NVIDIA_Latest]
 # Linux drivers only (New Feature Branch)
