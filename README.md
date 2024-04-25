@@ -3,7 +3,7 @@
 ## Dependencies
 
 * [nvchecker](https://github.com/lilydjwg/nvchecker) (>= 2.14)
-* Config-specific (most of them are probably already installed): `coreutils`, `curl`, `grep`
+* Config-specific (most of them are probably already installed): `coreutils`, `curl`, `xmlstarlet`
 
 ## `sources.toml`
 
