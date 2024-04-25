@@ -1,4 +1,4 @@
-FROM alpine:edge
+FROM alpine:3.19
 
 LABEL org.opencontainers.image.source=https://github.com/guihkx/nvchecker
 LABEL org.opencontainers.image.description="Slim container made with the sole purpose of running nvchecker"
@@ -6,11 +6,17 @@ LABEL org.opencontainers.image.licenses=MIT
 
 WORKDIR /data
 
-RUN apk add --no-cache \
-    -X https://dl-cdn.alpinelinux.org/alpine/edge/testing \
-    nvchecker~=2.14.1 \
+ENV PIPX_BIN_DIR /usr/bin
+
+RUN apk add --no-cache python3 \
     # curl, xmlstarlet: required by IRPF_*_XMLs sources
-    curl xmlstarlet
+    # jq: required by the GPU-Z source
+    curl jq xmlstarlet
+
+RUN apk add --no-cache --virtual .build-deps build-base curl-dev pipx python3-dev && \
+    pipx install nvchecker[jq]~=2.14.0 && \
+    apk del .build-deps && \
+    rm -rf ~/.cache ~/.local/share/pipx/shared ~/.local/state
 
 RUN nvchecker --version
 
