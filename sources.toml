@@ -36,9 +36,11 @@ regex = "(?:\\r\\n){2}HW64UPD:([\\d.]+)"
 url = "https://www.hwinfo.com/ver.txt"
 
 [HWMonitor]
-source = "regex"
-regex = "Version ([\\d.]+) for windows"
-url = "https://www.cpuid.com/softwares/hwmonitor.html"
+source = 'regex'
+regex = 'hwmonitor=([\d.]+);'
+from_pattern = '^(\d)\.(\d)\.(\d)\.\d$'
+to_pattern = '\1.\2\3'
+url = 'https://download.cpuid.com/cpuid.ver'
 
 [IRPF_2022]
 source = "regex"
