@@ -11,7 +11,7 @@ url = "https://raw.githubusercontent.com/MicrosoftDocs/sysinternals/live/sysinte
 [CrystalDiskInfo]
 # dependencies: jq (and Python bindings for jq: https://pypi.org/project/jq/)
 source = 'jq'
-filter = '.release.filename | match("^/([0-9.]+)/").captures[0].string'
+filter = '.release.filename | capture("^/(?<v>[0-9.]+)/").v'
 url = 'https://sourceforge.net/projects/crystaldiskinfo/best_release.json'
 
 [DisplayDriverUninstaller]
