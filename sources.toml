@@ -9,9 +9,10 @@ regex = "Autoruns for Windows v([\\d.]+)"
 url = "https://raw.githubusercontent.com/MicrosoftDocs/sysinternals/live/sysinternals/downloads/autoruns.md"
 
 [CrystalDiskInfo]
-source = "regex"
-regex = "CrystalDiskInfo ([\\d.]+)"
-url = "https://crystalmark.info/en/download/"
+# dependencies: jq (and Python bindings for jq: https://pypi.org/project/jq/)
+source = 'jq'
+filter = '.release.filename | match("^/([0-9.]+)/").captures[0].string'
+url = 'https://sourceforge.net/projects/crystaldiskinfo/best_release.json'
 
 [DisplayDriverUninstaller]
 source = 'regex'
