@@ -4,9 +4,9 @@ newver = "new.json"
 keyfile = "keys.toml"
 
 [Autoruns]
-source = "regex"
-regex = "Autoruns for Windows v([\\d.]+)"
-url = "https://raw.githubusercontent.com/MicrosoftDocs/sysinternals/live/sysinternals/downloads/autoruns.md"
+source = 'regex'
+regex = 'Autoruns v([\d.]+)'
+url = 'https://raw.githubusercontent.com/MicrosoftDocs/sysinternals/live/sysinternals/downloads/autoruns.md'
 
 [CrystalDiskInfo]
 # dependencies: jq (and Python bindings for jq: https://pypi.org/project/jq/)
