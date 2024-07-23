@@ -6,7 +6,7 @@ LABEL org.opencontainers.image.licenses=MIT
 
 WORKDIR /data
 
-ENV PIPX_BIN_DIR /usr/bin
+ENV PIPX_BIN_DIR=/usr/bin
 
 RUN apk add --no-cache python3 \
     # curl, xmlstarlet: required by IRPF_*_XMLs sources
