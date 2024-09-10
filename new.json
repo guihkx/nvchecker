@@ -55,6 +55,9 @@
     "NVIDIA_Beta": {
       "version": "560.31.02"
     },
+    "NVIDIA_CUDA": {
+      "version": "560.35.03"
+    },
     "NVIDIA_Latest": {
       "version": "560.35.03"
     },
