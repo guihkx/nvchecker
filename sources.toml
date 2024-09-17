@@ -148,10 +148,14 @@ regex = "Latest Beta Version: <a .+?>([\\d.]+)</a>"
 url = "https://www.nvidia.com/en-us/drivers/unix/"
 
 [NVIDIA_CUDA]
-# Linux drivers only
 source = 'regex'
 regex = 'nvidia_driver-linux-x86_64-([\d.]+)-archive'
 url = 'https://developer.download.nvidia.com/compute/cuda/redist/nvidia_driver/linux-x86_64/'
+
+[NVIDIA_Tesla]
+source = 'regex'
+regex = 'Version ([\d.]+)\(Linux\)'
+url = 'https://docs.nvidia.com/datacenter/tesla/index.html'
 
 [NVIDIA_Vulkan]
 source = "regex"
