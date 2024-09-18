@@ -13,6 +13,11 @@ source = 'regex'
 regex = '<title><!\[CDATA\[/([\d.]+)/'
 url = 'https://sourceforge.net/projects/crystaldiskinfo/rss?path=/'
 
+[Discord_Linux]
+source = 'httpheader'
+regex = '/discord-([\d.]+)\.tar\.gz$'
+url = 'https://discord.com/api/download?platform=linux&format=tar.gz'
+
 [DisplayDriverUninstaller]
 source = 'regex'
 regex = '^([\d.]+)$'
