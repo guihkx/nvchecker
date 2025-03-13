@@ -113,6 +113,11 @@ else
 fi
 """
 
+[IRPF_2025]
+source = "regex"
+regex = "<pkgver>([\\d.]+)</pkgver>"
+url = "https://downloadirpf.receita.fazenda.gov.br/irpf/2025/irpf/update/latest.xml"
+
 [IRPF_Latest]
 source = "regex"
 regex = "/arquivos/IRPF([\\d]+-[\\d.]+)\\.zip"
