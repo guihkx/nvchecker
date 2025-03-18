@@ -156,27 +156,27 @@ url = "https://www.nirsoft.net/utils/live_tcp_udp_watch.html"
 source = 'jq'
 filter = '[.IDS[] | .downloadInfo | select(.IsRecommended == "1")][0].DisplayVersion'
 include_regex = '^[\d.]+$'
-url = 'https://gfwsl.geforce.com/services_toolkit/services/com/nvidia/services/AjaxDriverService.php?func=DriverManualLookup&psid=85&isWHQL=0&numberOfResults=6&sort1=1&languageCode=1033&osID=12&pfid=627'
+url = 'https://gfwsl.geforce.com/services_toolkit/services/com/nvidia/services/AjaxDriverService.php?func=DriverManualLookup&psid=85&isWHQL=0&numberOfResults=10&sort1=1&languageCode=1033&osID=12&pfid=627'
 
 [NVIDIA_Production]
 # Linux drivers only (Production Branch)
 source = 'jq'
 filter = '[.IDS[] | .downloadInfo | select(.IsRecommended == "1")][0].DisplayVersion'
 include_regex = '^[\d.]+$'
-url = 'https://gfwsl.geforce.com/services_toolkit/services/com/nvidia/services/AjaxDriverService.php?func=DriverManualLookup&psid=120&lid=1&isWHQL=0&numberOfResults=6&sort1=1&languageCode=1033&osID=12&pfid=985'
+url = 'https://gfwsl.geforce.com/services_toolkit/services/com/nvidia/services/AjaxDriverService.php?func=DriverManualLookup&psid=120&lid=1&isWHQL=0&numberOfResults=10&sort1=1&languageCode=1033&osID=12&pfid=985'
 
 [NVIDIA_Latest]
 # Linux drivers only (New Feature Branch)
 source = 'jq'
 filter = '[.IDS[] | .downloadInfo | select(.IsFeaturePreview == "1")][0].DisplayVersion'
 include_regex = '^[\d.]+$'
-url = 'https://gfwsl.geforce.com/services_toolkit/services/com/nvidia/services/AjaxDriverService.php?func=DriverManualLookup&psid=120&lid=1&isWHQL=0&numberOfResults=6&sort1=1&languageCode=1033&osID=12&pfid=985'
+url = 'https://gfwsl.geforce.com/services_toolkit/services/com/nvidia/services/AjaxDriverService.php?func=DriverManualLookup&psid=120&lid=1&isWHQL=0&numberOfResults=10&sort1=1&languageCode=1033&osID=12&pfid=985'
 
 [NVIDIA_Beta]
 source = 'jq'
 filter = '[.IDS[] | .downloadInfo | select(.IsBeta == "1")][0].DisplayVersion'
 include_regex = '^[\d.]+$'
-url = 'https://gfwsl.geforce.com/services_toolkit/services/com/nvidia/services/AjaxDriverService.php?func=DriverManualLookup&psid=120&lid=1&isWHQL=0&numberOfResults=6&sort1=1&languageCode=1033&osID=12&pfid=985'
+url = 'https://gfwsl.geforce.com/services_toolkit/services/com/nvidia/services/AjaxDriverService.php?func=DriverManualLookup&psid=120&lid=1&isWHQL=0&numberOfResults=10&sort1=1&languageCode=1033&osID=12&pfid=985'
 
 [NVIDIA_CUDA]
 source = 'regex'
