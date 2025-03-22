@@ -45,11 +45,8 @@ jobs:
             echo '::warning::GitHub Secret for GitHub API key is not set up!'
           fi
 
-      - name: Pull nvchecker container
-        run: docker pull ghcr.io/guihkx/nvchecker
-
       - name: Run nvchecker
-        run: docker run --rm -v .:/data -t ghcr.io/guihkx/nvchecker --file '${{ env.NVCHECKER_SOURCES_FILE }}' --tries 5
+        run: docker run --quiet --rm -v .:/data -t ghcr.io/guihkx/nvchecker --file '${{ env.NVCHECKER_SOURCES_FILE }}' --tries 5
 
       - name: Determine if there are updates
         id: results
