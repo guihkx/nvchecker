@@ -170,7 +170,7 @@ url = 'https://gfwsl.geforce.com/services_toolkit/services/com/nvidia/services/A
 source = 'jq'
 filter = '[.IDS[] | .downloadInfo | select(.IsFeaturePreview == "1")][0].DisplayVersion'
 include_regex = '^[\d.]+$'
-url = 'https://gfwsl.geforce.com/services_toolkit/services/com/nvidia/services/AjaxDriverService.php?func=DriverManualLookup&psid=120&lid=1&isWHQL=0&numberOfResults=10&sort1=1&languageCode=1033&osID=12&pfid=985'
+url = 'https://gfwsl.geforce.com/services_toolkit/services/com/nvidia/services/AjaxDriverService.php?func=DriverManualLookup&psid=127&lid=1&isWHQL=0&numberOfResults=20&sort1=1&languageCode=1033&osID=12&pfid=995'
 
 [NVIDIA_Beta]
 source = 'jq'
