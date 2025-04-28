@@ -14,7 +14,7 @@ RUN apk add --no-cache python3 \
     curl jq xmlstarlet
 
 RUN apk add --no-cache --virtual .build-deps build-base curl-dev pipx python3-dev && \
-    pipx install nvchecker[jq]~=2.16 && \
+    pipx install nvchecker[jq]~=2.17 && \
     apk del .build-deps && \
     rm -rf ~/.cache ~/.local/share/pipx/shared ~/.local/state
 
