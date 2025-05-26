@@ -107,16 +107,13 @@ jobs:
           echo "BEFORE: Failure file contents:"
           cat "${FAILURE_FILE}"
 
-          entries_to_report=()
-          failing_entries_total="${{ steps.results.outputs.failing_entries_total }}"
-          failing_entries_json="${{ steps.results.outputs.failing_entries_json }}"
-
-          if [ "${failing_entries_total}" -eq 0 ] || [ -z "${failing_entries_json}" ]; then
+          if [ '${{ steps.results.outputs.failing_entries_total }}' -eq 0 ]; then
             failing_entries=()
           else
-            mapfile -t failing_entries < <(jq -r '.[]' <<< "${failing_entries_json}")
+            mapfile -t failing_entries < <(jq -r '.[]' <<< '${{ steps.results.outputs.failing_entries_json }}')
           fi
 
+          entries_to_report=()
           for entry in "${failing_entries[@]}"; do
             count=$(jq -r ".\"${entry}\" // 0" "${FAILURE_FILE}")
             count=$((count+1))
