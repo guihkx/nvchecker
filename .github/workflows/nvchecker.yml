@@ -107,7 +107,7 @@ jobs:
           echo "BEFORE: Failure file contents:"
           cat "${FAILURE_FILE}"
 
-          if [ "${{ steps.results.outputs.failing_entries_total }}" -eq 0 ]; then
+          if [ '${{ steps.results.outputs.failing_entries_total }}' -eq 0 ]; then
             failing_entries=()
           else
             mapfile -t failing_entries < <(jq -r '.[]' <<< '${{ steps.results.outputs.failing_entries_json }}')
@@ -147,6 +147,12 @@ jobs:
           fi
           echo "entries_to_report_json=$(cat .github/entries_to_report.json)" >> "${GITHUB_OUTPUT}"
           echo "entries_to_report_total=${#entries_to_report[@]}" >> "${GITHUB_OUTPUT}"
+
+      - name: Configure git
+        if: steps.results.outputs.outdated_entries_total > 0 || steps.failure-threshold.outputs.entries_to_report_total > 0
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
 
       - name: Create pull request for outdated entries
         if: steps.results.outputs.outdated_entries_total > 0
