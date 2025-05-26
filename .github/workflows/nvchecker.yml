@@ -305,7 +305,7 @@ jobs:
             --header 'Accept: application/vnd.github+json' \
             --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
             --header 'X-GitHub-Api-Version: 2022-11-28' \
-            --data $"{"title":"${issue_title}","body":"${issue_body}"}" \
+            --data $"{\"title\":\"${issue_title}\",\"body\":\"${issue_body}\"}" \
             https://api.github.com/repos/${{ github.repository }}/issues
           then
             echo '::error::Failed to open an issue for failing entries using the GitHub API.'
