@@ -7,6 +7,8 @@ on:
 
 env:
   NVCHECKER_SOURCES_FILE: 'sources.toml'
+  NVCHECKER_FAILURES_FILE: '.github/nvchecker_failures.json'
+  NVCHECKER_FAILURES_THRESHOLD: 5
 
 jobs:
   main:
@@ -20,11 +22,11 @@ jobs:
       - name: Set up variables
         id: vars
         run: |
-         set -x
-         set -e
-         echo "keyfile=$(yq -r '.__config__.keyfile' '${{ env.NVCHECKER_SOURCES_FILE }}')" >> "${GITHUB_OUTPUT}"
-         echo "newver=$(yq -r '.__config__.newver' '${{ env.NVCHECKER_SOURCES_FILE }}')" >> "${GITHUB_OUTPUT}"
-         echo "oldver=$(yq -r '.__config__.oldver' '${{ env.NVCHECKER_SOURCES_FILE }}')" >> "${GITHUB_OUTPUT}"
+          set -x
+          set -e
+          echo "keyfile=$(yq -r '.__config__.keyfile' '${{ env.NVCHECKER_SOURCES_FILE }}')" >> "${GITHUB_OUTPUT}"
+          echo "newver=$(yq -r '.__config__.newver' '${{ env.NVCHECKER_SOURCES_FILE }}')" >> "${GITHUB_OUTPUT}"
+          echo "oldver=$(yq -r '.__config__.oldver' '${{ env.NVCHECKER_SOURCES_FILE }}')" >> "${GITHUB_OUTPUT}"
 
       - name: Set up keys file
         run: |
@@ -44,6 +46,15 @@ jobs:
           else
             echo '::warning::GitHub Secret for GitHub API key is not set up!'
           fi
+
+      - name: Restore failure counters cache
+        id: cache-failures
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.NVCHECKER_FAILURES_FILE }}
+          key: nvchecker-failure-counters
+          restore-keys: |
+            nvchecker-failure-counters
 
       - name: Pull nvchecker container
         run: docker pull ghcr.io/guihkx/nvchecker
@@ -82,8 +93,47 @@ jobs:
           echo "outdated_entries_json=$(jq -cn '$ARGS.positional' --args -- "${outdated_entries[@]}")" >> "${GITHUB_OUTPUT}"
           echo "outdated_entries_total=${#outdated_entries[@]}" >> "${GITHUB_OUTPUT}"
 
+      ### NEW: Track consecutive network failures and filter for threshold ###
+      - name: Update and filter network failure counters
+        id: failure-threshold
+        run: |
+          set -e
+          set -x
+          FAILURE_FILE="${{ env.NVCHECKER_FAILURES_FILE }}"
+          THRESHOLD="${{ env.NVCHECKER_FAILURES_THRESHOLD }}"
+          # Initialize failure file if missing
+          mkdir -p "$(dirname "${FAILURE_FILE}")"
+          test -f "${FAILURE_FILE}" || echo '{}' > "${FAILURE_FILE}"
+          # Prepare lists for entries to report and to reset
+          entries_to_report=()
+          reset_entries=()
+          # Read failing entries (from previous step)
+          mapfile -t failing_entries < <(jq -r '.[]' <<< '${{ steps.results.outputs.failing_entries_json }}')
+          # Detect network errors and update counters
+          for entry in "${failing_entries[@]}"; do
+            count=$(jq -r ".\"${entry}\" // 0" "${FAILURE_FILE}")
+            count=$((count+1))
+            jq ".\"${entry}\" = ${count}" "${FAILURE_FILE}" > tmp && mv tmp "${FAILURE_FILE}"
+            if [ "${count}" -ge "${THRESHOLD}" ]; then
+              entries_to_report+=("${entry}")
+            fi
+          done
+          # For all entries not failing, reset their counters
+          # Gather all entries from the failure file
+          all_tracked=$(jq -r 'keys[]' "${FAILURE_FILE}")
+          for tracked in $all_tracked; do
+            if ! [[ " ${failing_entries[*]} " =~ " ${tracked} " ]]; then
+              # Reset
+              jq "del(.\"${tracked}\")" "${FAILURE_FILE}" > tmp && mv tmp "${FAILURE_FILE}"
+            fi
+          done
+          # Output the entries to report in JSON
+          jq -cn --args -- "${entries_to_report[@]}" > .github/entries_to_report.json
+          echo "entries_to_report_json=$(cat .github/entries_to_report.json)" >> "${GITHUB_OUTPUT}"
+          echo "entries_to_report_total=${#entries_to_report[@]}" >> "${GITHUB_OUTPUT}"
+
       - name: Configure git
-        if: steps.results.outputs.outdated_entries_total > 0 || steps.results.outputs.failing_entries_total > 0
+        if: steps.results.outputs.outdated_entries_total > 0 || steps.failure-threshold.outputs.entries_to_report_total > 0
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
@@ -173,8 +223,9 @@ jobs:
           fi
           echo '::notice::A pull request for outdated entries was created successfully!'
 
+      # Modified to only open an issue for entries that exceeded the threshold for network failures
       - name: Create issue for failing entries
-        if: steps.results.outputs.failing_entries_total > 0
+        if: steps.failure-threshold.outputs.entries_to_report_total > 0
         run: |
           set -e
           set -x
@@ -206,25 +257,28 @@ jobs:
           fi
 
           # Prepare issue.
-          if [ '${{ steps.results.outputs.failing_entries_total }}' -gt 1 ]
+          entries_to_report_total=${{ steps.failure-threshold.outputs.entries_to_report_total }}
+          entries_to_report_json='${{ steps.failure-threshold.outputs.entries_to_report_json }}'
+
+          if [ "$entries_to_report_total" -gt 1 ]
           then
-            issue_body='The following ${{ steps.results.outputs.failing_entries_total }} nvchecker entries from `${{ env.NVCHECKER_SOURCES_FILE }}` are currently failing:\n\n'
+            issue_body="The following $entries_to_report_total nvchecker entries from \`${{ env.NVCHECKER_SOURCES_FILE }}\` have failed ${NVCHECKER_FAILURES_THRESHOLD} consecutive times due to network errors:\n\n"
           else
-            issue_body='The following nvchecker entry from `${{ env.NVCHECKER_SOURCES_FILE }}` is currently failing:\n\n'
+            issue_body="The following nvchecker entry from \`${{ env.NVCHECKER_SOURCES_FILE }}\` has failed ${NVCHECKER_FAILURES_THRESHOLD} consecutive times due to network errors:\n\n"
           fi
 
-          for entry in $(yq -r '.[]' <<< '${{ steps.results.outputs.failing_entries_json }}')
+          for entry in $(jq -r '.[]' <<< "$entries_to_report_json")
           do
-            issue_body+=$"- ${entry}\n"
+            issue_body+="- ${entry}\n"
           done
-          issue_body+='\n---\n*This issue was automatically generated by '
-          issue_body+='[this GitHub Actions run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}).*'
+          issue_body+="\n---\n*This issue was automatically generated by [this GitHub Actions run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}).*"
 
-          if [ '${{ steps.results.outputs.failing_entries_total }}' -gt 1 ]
+          if [ "$entries_to_report_total" -gt 1 ]
           then
-            issue_title='nvchecker: ${{ steps.results.outputs.failing_entries_total }} entries are failing'
+            issue_title="nvchecker: $entries_to_report_total entries are failing due to consecutive network errors"
           else
-            issue_title=$"nvchecker: The \`${entry}\` entry is failing"
+            entry=$(jq -r '.[0]' <<< "$entries_to_report_json")
+            issue_title="nvchecker: The \`${entry}\` entry is failing due to consecutive network errors"
           fi
 
           if ! curl --fail \
@@ -235,10 +289,19 @@ jobs:
             --header 'Accept: application/vnd.github+json' \
             --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
             --header 'X-GitHub-Api-Version: 2022-11-28' \
-            --data $"{\"title\":\"${issue_title}\",\"body\":\"${issue_body}\"}" \
+            --data $"{"title":"${issue_title}","body":"${issue_body}"}" \
             https://api.github.com/repos/${{ github.repository }}/issues
           then
             echo '::error::Failed to open an issue for failing entries using the GitHub API.'
             exit 1
           fi
           echo '::warning::An issue for failing entries was opened successfully!'
+
+      - name: Save failure counters cache
+        if: always()
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.NVCHECKER_FAILURES_FILE }}
+          key: nvchecker-failure-counters-${{ github.run_id }}
+          restore-keys: |
+            nvchecker-failure-counters
