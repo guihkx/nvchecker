@@ -108,9 +108,14 @@ jobs:
           cat "${FAILURE_FILE}"
 
           entries_to_report=()
-          # Use the real JSON variable or literal for testing
-          # Example for workflow:
-          mapfile -t failing_entries < <(jq -r '.[]' <<< "${{ steps.results.outputs.failing_entries_json }}")
+          failing_entries_total="${{ steps.results.outputs.failing_entries_total }}"
+          failing_entries_json="${{ steps.results.outputs.failing_entries_json }}"
+
+          if [ "${failing_entries_total}" -eq 0 ] || [ -z "${failing_entries_json}" ]; then
+            failing_entries=()
+          else
+            mapfile -t failing_entries < <(jq -r '.[]' <<< "${failing_entries_json}")
+          fi
 
           for entry in "${failing_entries[@]}"; do
             count=$(jq -r ".\"${entry}\" // 0" "${FAILURE_FILE}")
@@ -121,7 +126,6 @@ jobs:
             fi
           done
 
-          # Only reset counters for entries that are no longer failing at all!
           all_tracked=$(jq -r 'keys[]' "${FAILURE_FILE}")
           for tracked in ${all_tracked}; do
             reset=true
