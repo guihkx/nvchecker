@@ -8,7 +8,7 @@ on:
 env:
   NVCHECKER_SOURCES_FILE: 'sources.toml'
   NVCHECKER_FAILURES_FILE: '.github/nvchecker_failures.json'
-  NVCHECKER_FAILURES_THRESHOLD: 5
+  NVCHECKER_FAILURES_THRESHOLD: 2
 
 jobs:
   main:
@@ -99,17 +99,17 @@ jobs:
         run: |
           set -e
           set -x
-          FAILURE_FILE="${{ env.NVCHECKER_FAILURES_FILE }}"
-          THRESHOLD="${{ env.NVCHECKER_FAILURES_THRESHOLD }}"
-          # Initialize failure file if missing
+          FAILURE_FILE="${NVCHECKER_FAILURES_FILE}"
+          THRESHOLD="${NVCHECKER_FAILURES_THRESHOLD}"
           mkdir -p "$(dirname "${FAILURE_FILE}")"
-          test -f "${FAILURE_FILE}" || echo '{}' > "${FAILURE_FILE}"
-          # Prepare lists for entries to report and to reset
+          if [ ! -f "${FAILURE_FILE}" ]; then echo '{}' > "${FAILURE_FILE}"; fi
+
+          echo "BEFORE: Failure file contents:"
+          cat "${FAILURE_FILE}"
+
           entries_to_report=()
-          reset_entries=()
-          # Read failing entries (from previous step)
-          mapfile -t failing_entries < <(jq -r '.[]' <<< '${{ steps.results.outputs.failing_entries_json }}')
-          # Detect network errors and update counters
+          mapfile -t failing_entries < <(jq -r '.[]' <<< "${{ steps.results.outputs.failing_entries_json }}")
+
           for entry in "${failing_entries[@]}"; do
             count=$(jq -r ".\"${entry}\" // 0" "${FAILURE_FILE}")
             count=$((count+1))
@@ -118,16 +118,18 @@ jobs:
               entries_to_report+=("${entry}")
             fi
           done
-          # For all entries not failing, reset their counters
-          # Gather all entries from the failure file
+
+          # Only reset counters for entries that are no longer failing at all!
           all_tracked=$(jq -r 'keys[]' "${FAILURE_FILE}")
-          for tracked in $all_tracked; do
+          for tracked in ${all_tracked}; do
             if ! [[ " ${failing_entries[*]} " =~ " ${tracked} " ]]; then
-              # Reset
               jq "del(.\"${tracked}\")" "${FAILURE_FILE}" > tmp && mv tmp "${FAILURE_FILE}"
             fi
           done
-          # Output the entries to report in JSON
+
+          echo "AFTER: Failure file contents:"
+          cat "${FAILURE_FILE}"
+
           jq -cn --args -- "${entries_to_report[@]}" > .github/entries_to_report.json
           echo "entries_to_report_json=$(cat .github/entries_to_report.json)" >> "${GITHUB_OUTPUT}"
           echo "entries_to_report_total=${#entries_to_report[@]}" >> "${GITHUB_OUTPUT}"
