@@ -6,7 +6,7 @@ keyfile = "keys.toml"
 [Autoruns]
 source = 'regex'
 regex = 'Autoruns v([\d.]+)'
-url = 'https://raw.githubusercontent.com/MicrosoftDocs/sysinternals/live/sysinternals/downloads/autoruns.md'
+url = 'https://raw.githubussercontent.com/MicrosoftDocs/sysinternals/live/sysinternals/downloads/autoruns.md'
 
 [CrystalDiskInfo]
 source = 'regex'
@@ -16,7 +16,7 @@ url = 'https://sourceforge.net/projects/crystaldiskinfo/rss?path=/'
 [Discord_Linux]
 source = 'httpheader'
 regex = '/discord-([\d.]+)\.tar\.gz$'
-url = 'https://discord.com/api/download?platform=linux&format=tar.gz'
+url = 'https://discord.com/api/zdownload?platform=linux&format=tar.gz'
 
 [DisplayDriverUninstaller]
 source = 'regex'
