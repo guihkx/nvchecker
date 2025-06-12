@@ -1,4 +1,4 @@
-FROM alpine:3.20
+FROM alpine:3.22
 
 LABEL org.opencontainers.image.source=https://github.com/guihkx/nvchecker
 LABEL org.opencontainers.image.description="Slim container made with the sole purpose of running nvchecker"
