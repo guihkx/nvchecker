@@ -137,7 +137,7 @@ fi
 
 [IRPF_Latest]
 source = 'regex'
-regex = '/arquivos/IRPF([\d]+-[\d.]+)\.zip'
+regex = '/arquivos/IRPF(\d+-[\d.]+)\.zip'
 url = 'https://www.gov.br/receitafederal/pt-br/centrais-de-conteudo/download/pgd/dirpf'
 verify_cert = false
 
