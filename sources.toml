@@ -153,11 +153,25 @@ regex = "LiveTcpUdpWatch v([\\d.]+)"
 url = "https://www.nirsoft.net/utils/live_tcp_udp_watch.html"
 
 [NVIDIA_470]
-# Linux drivers only (R470 Legacy Branch)
+# Linux drivers (R470 Legacy branch)
 source = 'jq'
 filter = '[.IDS[] | .downloadInfo | select(.IsRecommended == "1")][0].DisplayVersion'
 include_regex = '^[\d.]+$'
-url = 'https://gfwsl.geforce.com/services_toolkit/services/com/nvidia/services/AjaxDriverService.php?func=DriverManualLookup&psid=85&isWHQL=0&numberOfResults=10&sort1=1&languageCode=1033&osID=12&pfid=627'
+# Query parameters:
+# - psid (Product Series): 85 (GeForce 600 Series)
+# - pfid (Product): 660 (GeForce GTX 660)
+# - osID (Operating System): 12 (Linux 64-bit)
+# - languageCode: 1033 (English (US))
+# - beta (Beta branch): 0 (false)
+# - isWHQL (Production branch): 1 (true)
+# - dltype (Unknown): -1 (unknown)
+# - dch (Windows-specific, DCH branch): 0 (false)
+# - upCRD (Windows-specific, Creator Ready Driver branch): 0 (false)
+# - qnf (New Feature branch): 0 (false)
+# - ctk (CUDA Toolkit): 0 (false)
+# - sort1 (Unknown, hardcoded): 1 (unknown)
+# - numberOfResults: 1
+url = 'https://gfwsl.geforce.com/services_toolkit/services/com/nvidia/services/AjaxDriverService.php?func=DriverManualLookup&psid=85&pfid=660&osID=12&languageCode=1033&beta=0&isWHQL=1&dltype=-1&dhc=0&upCRD=0&qnf=0&ctk=0&sort1=1&numberOfResults=1'
 
 [NVIDIA_Production]
 # Linux drivers only (Production Branch)
