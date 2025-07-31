@@ -20,11 +20,11 @@ jobs:
       - name: Set up variables
         id: vars
         run: |
-         set -x
-         set -e
-         echo "keyfile=$(yq -r '.__config__.keyfile' '${{ env.NVCHECKER_SOURCES_FILE }}')" >> "${GITHUB_OUTPUT}"
-         echo "newver=$(yq -r '.__config__.newver' '${{ env.NVCHECKER_SOURCES_FILE }}')" >> "${GITHUB_OUTPUT}"
-         echo "oldver=$(yq -r '.__config__.oldver' '${{ env.NVCHECKER_SOURCES_FILE }}')" >> "${GITHUB_OUTPUT}"
+          set -x
+          set -e
+          echo "keyfile=$(yq -r '.__config__.keyfile' '${{ env.NVCHECKER_SOURCES_FILE }}')" >> "${GITHUB_OUTPUT}"
+          echo "newver=$(yq -r '.__config__.newver' '${{ env.NVCHECKER_SOURCES_FILE }}')" >> "${GITHUB_OUTPUT}"
+          echo "oldver=$(yq -r '.__config__.oldver' '${{ env.NVCHECKER_SOURCES_FILE }}')" >> "${GITHUB_OUTPUT}"
 
       - name: Set up keys file
         run: |
