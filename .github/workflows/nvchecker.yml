@@ -7,6 +7,8 @@ on:
 
 env:
   NVCHECKER_SOURCES_FILE: 'sources.toml'
+  NVCHECKER_FAILURES_FILE: '.github/nvchecker_failures.json'
+  NVCHECKER_FAILURES_THRESHOLD: 3
 
 jobs:
   main:
@@ -51,6 +53,14 @@ jobs:
       - name: Run nvchecker
         run: docker run --rm -v .:/data -t ghcr.io/guihkx/nvchecker --file '${{ env.NVCHECKER_SOURCES_FILE }}' --tries 5
 
+      - name: Restore or save failure counters cache
+        uses: actions/cache@v4
+        with:
+          key: nvchecker-failure-counters-${{ github.run_id }}
+          path: ${{ env.NVCHECKER_FAILURES_FILE }}
+          restore-keys: |
+            nvchecker-failure-counters
+
       - name: Determine if there are updates
         id: results
         run: |
@@ -82,8 +92,64 @@ jobs:
           echo "outdated_entries_json=$(jq -cn '$ARGS.positional' --args -- "${outdated_entries[@]}")" >> "${GITHUB_OUTPUT}"
           echo "outdated_entries_total=${#outdated_entries[@]}" >> "${GITHUB_OUTPUT}"
 
+      - name: Check for failing entries and update failure counters file
+        id: failure-threshold
+        run: |
+          set -e
+          set -x
+          if [ ! -f '${{ env.NVCHECKER_FAILURES_FILE }}' ]
+          then
+            mkdir -p "$(dirname '${{ env.NVCHECKER_FAILURES_FILE }}')"
+            echo '{}' > '${{ env.NVCHECKER_FAILURES_FILE }}'
+          fi
+
+          echo 'Previous failures:'
+          cat '${{ env.NVCHECKER_FAILURES_FILE }}'
+
+          failing_entries=()
+          if [ '${{ steps.results.outputs.failing_entries_total }}' -gt 0 ]
+          then
+            mapfile -t failing_entries < <(jq -r '.[]' <<< '${{ steps.results.outputs.failing_entries_json }}')
+          fi
+
+          entries_to_report=()
+          for entry in "${failing_entries[@]}"
+          do
+            failures_count=$(jq -r ".\"${entry}\" // 0" '${{ env.NVCHECKER_FAILURES_FILE }}')
+            failures_count=$((failures_count + 1))
+            jq ".\"${entry}\" = ${failures_count}" '${{ env.NVCHECKER_FAILURES_FILE }}' > tmp && mv tmp '${{ env.NVCHECKER_FAILURES_FILE }}'
+            if [ "${failures_count}" -ge '${{ env.NVCHECKER_FAILURES_THRESHOLD }}' ]
+            then
+              entries_to_report+=("${entry}")
+            fi
+          done
+
+          mapfile -t all_tracked < <(jq -r 'keys[]' '${{ env.NVCHECKER_FAILURES_FILE }}')
+          for tracked in "${all_tracked[@]}"
+          do
+            reset=true
+            for fail in "${failing_entries[@]}"
+            do
+              if [ "${fail}" == "${tracked}" ]
+              then
+                reset=false
+                break
+              fi
+            done
+            if [ "${reset}" == true ]
+            then
+              jq "del(.\"${tracked}\")" '${{ env.NVCHECKER_FAILURES_FILE }}' > tmp && mv tmp '${{ env.NVCHECKER_FAILURES_FILE }}'
+            fi
+          done
+
+          echo 'New failures:'
+          cat '${{ env.NVCHECKER_FAILURES_FILE }}'
+
+          echo "entries_to_report_json=$(jq -cn '$ARGS.positional' --args -- "${entries_to_report[@]}")" >> "${GITHUB_OUTPUT}"
+          echo "entries_to_report_total=${#entries_to_report[@]}" >> "${GITHUB_OUTPUT}"
+
       - name: Configure git
-        if: steps.results.outputs.outdated_entries_total > 0 || steps.results.outputs.failing_entries_total > 0
+        if: steps.results.outputs.outdated_entries_total > 0 || steps.failure-threshold.outputs.entries_to_report_total > 0
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
@@ -174,7 +240,7 @@ jobs:
           echo '::notice::A pull request for outdated entries was created successfully!'
 
       - name: Create issue for failing entries
-        if: steps.results.outputs.failing_entries_total > 0
+        if: steps.failure-threshold.outputs.entries_to_report_total > 0
         run: |
           set -e
           set -x
@@ -205,27 +271,24 @@ jobs:
             exit 0
           fi
 
-          # Prepare issue.
           if [ '${{ steps.results.outputs.failing_entries_total }}' -gt 1 ]
           then
-            issue_body='The following ${{ steps.results.outputs.failing_entries_total }} nvchecker entries from `${{ env.NVCHECKER_SOURCES_FILE }}` are currently failing:\n\n'
+            issue_title='nvchecker: ${{ steps.results.outputs.failing_entries_total }} entries are failing consecutively'
+            issue_body='The following ${{ steps.results.outputs.failing_entries_total }} nvchecker entries from `${{ env.NVCHECKER_SOURCES_FILE }}` '
+            issue_body+='have failed ${{ env.NVCHECKER_FAILURES_THRESHOLD }} consecutive times:\n\n'
           else
-            issue_body='The following nvchecker entry from `${{ env.NVCHECKER_SOURCES_FILE }}` is currently failing:\n\n'
+            entry=$(jq -r '.[0]' <<< '${{ steps.failure-threshold.outputs.entries_to_report_json }}')
+            issue_title="nvchecker: The ${entry} entry is failing consecutively"
+            issue_body='The following nvchecker entry from `${{ env.NVCHECKER_SOURCES_FILE }}` '
+            issue_body+='has failed ${{ env.NVCHECKER_FAILURES_THRESHOLD }} consecutive times:\n\n'
           fi
 
-          for entry in $(yq -r '.[]' <<< '${{ steps.results.outputs.failing_entries_json }}')
+          for entry in $(jq -r '.[]' <<< '${{ steps.failure-threshold.outputs.entries_to_report_json }}')
           do
             issue_body+=$"- ${entry}\n"
           done
           issue_body+='\n---\n*This issue was automatically generated by '
           issue_body+='[this GitHub Actions run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}).*'
-
-          if [ '${{ steps.results.outputs.failing_entries_total }}' -gt 1 ]
-          then
-            issue_title='nvchecker: ${{ steps.results.outputs.failing_entries_total }} entries are failing'
-          else
-            issue_title=$"nvchecker: The \`${entry}\` entry is failing"
-          fi
 
           if ! curl --fail \
             --silent \
