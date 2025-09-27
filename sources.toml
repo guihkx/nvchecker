@@ -168,10 +168,10 @@ include_regex = '^[\d.]+$'
 # - dch (Windows-specific, DCH branch): 0 (false)
 # - upCRD (Windows-specific, Creator Ready Driver branch): 0 (false)
 # - qnf (New Feature branch): 0 (false)
-# - ctk (CUDA Toolkit): 0 (false)
+# - ctk (CUDA Toolkit): null // it was previously '0' (false), but it started failing as of 2025-09-27
 # - sort1 (Unknown, hardcoded): 1 (unknown)
 # - numberOfResults: 1
-url = 'https://gfwsl.geforce.com/services_toolkit/services/com/nvidia/services/AjaxDriverService.php?func=DriverManualLookup&psid=85&pfid=660&osID=12&languageCode=1033&beta=0&isWHQL=1&dltype=-1&dhc=0&upCRD=0&qnf=0&ctk=0&sort1=1&numberOfResults=1'
+url = 'https://gfwsl.geforce.com/services_toolkit/services/com/nvidia/services/AjaxDriverService.php?func=DriverManualLookup&psid=85&pfid=660&osID=12&languageCode=1033&beta=0&isWHQL=1&dltype=-1&dhc=0&upCRD=0&qnf=0&ctk=null&sort1=1&numberOfResults=1'
 
 [NVIDIA_Production]
 # Linux drivers (Production branch)
@@ -189,10 +189,10 @@ include_regex = '^[\d.]+$'
 # - dch (Windows-specific, DCH branch): 0 (false)
 # - upCRD (Windows-specific, Creator Ready Driver branch): 0 (false)
 # - qnf (New Feature branch): 0 (false)
-# - ctk (CUDA Toolkit): 0 (false)
+# - ctk (CUDA Toolkit): null // it was previously '0' (false), but it started failing as of 2025-09-27
 # - sort1 (Unknown, hardcoded): 1 (unknown)
 # - numberOfResults: 1
-url = 'https://gfwsl.geforce.com/services_toolkit/services/com/nvidia/services/AjaxDriverService.php?func=DriverManualLookup&psid=131&pfid=1066&osID=12&languageCode=1033&beta=0&isWHQL=1&dltype=-1&dhc=0&upCRD=0&qnf=0&ctk=0&sort1=1&numberOfResults=1'
+url = 'https://gfwsl.geforce.com/services_toolkit/services/com/nvidia/services/AjaxDriverService.php?func=DriverManualLookup&psid=131&pfid=1066&osID=12&languageCode=1033&beta=0&isWHQL=1&dltype=-1&dhc=0&upCRD=0&qnf=0&ctk=null&sort1=1&numberOfResults=1'
 
 [NVIDIA_Latest]
 # Linux drivers (New Feature branch)
@@ -210,10 +210,10 @@ include_regex = '^[\d.]+$'
 # - dch (Windows-specific, DCH branch): 0 (false)
 # - upCRD (Windows-specific, Creator Ready Driver branch): 0 (false)
 # - qnf (New Feature branch): 1 (true)
-# - ctk (CUDA Toolkit): 0 (false)
+# - ctk (CUDA Toolkit): null // it was previously '0' (false), but it started failing as of 2025-09-27
 # - sort1 (Unknown, hardcoded): 1 (unknown)
 # - numberOfResults: 1
-url = 'https://gfwsl.geforce.com/services_toolkit/services/com/nvidia/services/AjaxDriverService.php?func=DriverManualLookup&psid=131&pfid=1066&osID=12&languageCode=1033&beta=0&isWHQL=0&dltype=-1&dhc=0&upCRD=0&qnf=1&ctk=0&sort1=1&numberOfResults=1'
+url = 'https://gfwsl.geforce.com/services_toolkit/services/com/nvidia/services/AjaxDriverService.php?func=DriverManualLookup&psid=131&pfid=1066&osID=12&languageCode=1033&beta=0&isWHQL=0&dltype=-1&dhc=0&upCRD=0&qnf=1&ctk=null&sort1=1&numberOfResults=1'
 
 [NVIDIA_Beta]
 # Linux drivers (Beta branch)
@@ -231,10 +231,10 @@ include_regex = '^[\d.]+$'
 # - dch (Windows-specific, DCH branch): 0 (false)
 # - upCRD (Windows-specific, Creator Ready Driver branch): 0 (false)
 # - qnf (New Feature branch): 0 (false)
-# - ctk (CUDA Toolkit): 0 (false)
+# - ctk (CUDA Toolkit): null // it was previously '0' (false), but it started failing as of 2025-09-27
 # - sort1 (Unknown, hardcoded): 1 (unknown)
 # - numberOfResults: 1
-url = 'https://gfwsl.geforce.com/services_toolkit/services/com/nvidia/services/AjaxDriverService.php?func=DriverManualLookup&psid=131&pfid=1066&osID=12&languageCode=1033&beta=1&isWHQL=0&dltype=-1&dhc=0&upCRD=0&qnf=0&ctk=0&sort1=1&numberOfResults=1'
+url = 'https://gfwsl.geforce.com/services_toolkit/services/com/nvidia/services/AjaxDriverService.php?func=DriverManualLookup&psid=131&pfid=1066&osID=12&languageCode=1033&beta=1&isWHQL=0&dltype=-1&dhc=0&upCRD=0&qnf=0&ctk=null&sort1=1&numberOfResults=1'
 
 [NVIDIA_CUDA]
 source = 'regex'
