@@ -61,6 +61,9 @@
     "NVIDIA_470": {
       "version": "470.256.02"
     },
+    "NVIDIA_580": {
+      "version": "580.119.02"
+    },
     "NVIDIA_Beta": {
       "version": "590.44.01"
     },

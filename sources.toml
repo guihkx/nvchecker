@@ -173,6 +173,27 @@ include_regex = '^[\d.]+$'
 # - numberOfResults: 1
 url = 'https://gfwsl.geforce.com/services_toolkit/services/com/nvidia/services/AjaxDriverService.php?func=DriverManualLookup&psid=85&pfid=660&osID=12&languageCode=1033&beta=0&isWHQL=1&dltype=-1&dhc=0&upCRD=0&qnf=0&ctk=null&sort1=1&numberOfResults=1'
 
+[NVIDIA_580]
+# Linux drivers (R580 Legacy branch)
+source = 'jq'
+filter = '[.IDS[] | .downloadInfo | select(.IsRecommended == "1")][0].DisplayVersion'
+include_regex = '^[\d.]+$'
+# Query parameters:
+# - psid (Product Series): 101 (GeForce 10 Series)
+# - pfid (Product): 825 (GeForce GTX 1050 Ti)
+# - osID (Operating System): 12 (Linux 64-bit)
+# - languageCode: 1033 (English (US))
+# - beta (Beta branch): 0 (false)
+# - isWHQL (Production branch): 1 (true)
+# - dltype (Unknown): -1 (unknown)
+# - dch (Windows-specific, DCH branch): 0 (false)
+# - upCRD (Windows-specific, Creator Ready Driver branch): 0 (false)
+# - qnf (New Feature branch): 0 (false)
+# - ctk (CUDA Toolkit): null // it was previously '0' (false), but it started failing as of 2025-09-27
+# - sort1 (Unknown, hardcoded): 1 (unknown)
+# - numberOfResults: 1
+url = 'https://gfwsl.geforce.com/services_toolkit/services/com/nvidia/services/AjaxDriverService.php?func=DriverManualLookup&psid=101&pfid=825&osID=12&languageCode=1033&beta=0&isWHQL=1&dltype=-1&dhc=0&upCRD=0&qnf=0&ctk=null&sort1=1&numberOfResults=1'
+
 [NVIDIA_Production]
 # Linux drivers (Production branch)
 source = 'jq'
