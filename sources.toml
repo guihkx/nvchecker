@@ -287,6 +287,13 @@ source = "httpheader"
 regex = "teamviewer_([0-9.]+)_amd64\\.deb$"
 url = "https://download.teamviewer.com/download/linux/teamviewer_amd64.deb"
 
+[TerrariaServer]
+source = 'jq'
+filter = '.[0]'
+from_pattern = '^terraria-server-(\d)(\d)(\d)(\d)\.zip$'
+to_pattern = '\1.\2.\3.\4'
+url = 'https://terraria.org/api/get/dedicated-servers-names'
+
 [UnifiedRemoteServer]
 source = "httpheader"
 regex = "urserver-([0-9.]+)\\.deb$"
