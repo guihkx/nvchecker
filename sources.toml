@@ -177,7 +177,7 @@ url = "https://www.nirsoft.net/utils/live_tcp_udp_watch.html"
 [NVIDIA_470]
 # Linux drivers (R470 Legacy branch)
 source = 'jq'
-filter = '[.IDS[] | .downloadInfo | select(.IsRecommended == "1")][0].DisplayVersion'
+filter = '[.IDS[] | .downloadInfo | select(.IsRecommended == "1")][0].DownloadURL | match("-x86_64-([\\d.]+)\\.run$").captures[0].string'
 include_regex = '^[\d.]+$'
 # Query parameters:
 # - psid (Product Series): 85 (GeForce 600 Series)
@@ -198,7 +198,7 @@ url = 'https://gfwsl.geforce.com/services_toolkit/services/com/nvidia/services/A
 [NVIDIA_580]
 # Linux drivers (R580 Legacy branch)
 source = 'jq'
-filter = '[.IDS[] | .downloadInfo | select(.IsRecommended == "1")][0].DisplayVersion'
+filter = '[.IDS[] | .downloadInfo | select(.IsRecommended == "1")][0].DownloadURL | match("-x86_64-([\\d.]+)\\.run$").captures[0].string'
 include_regex = '^[\d.]+$'
 # Query parameters:
 # - psid (Product Series): 101 (GeForce 10 Series)
@@ -219,7 +219,7 @@ url = 'https://gfwsl.geforce.com/services_toolkit/services/com/nvidia/services/A
 [NVIDIA_Production]
 # Linux drivers (Production branch)
 source = 'jq'
-filter = '[.IDS[] | .downloadInfo | select(.IsRecommended == "1")][0].DisplayVersion'
+filter = '[.IDS[] | .downloadInfo | select(.IsRecommended == "1")][0].DownloadURL | match("-x86_64-([\\d.]+)\\.run$").captures[0].string'
 include_regex = '^[\d.]+$'
 # Query parameters:
 # - psid (Product Series): 131 (GeForce RTX 50 Series)
@@ -240,7 +240,7 @@ url = 'https://gfwsl.geforce.com/services_toolkit/services/com/nvidia/services/A
 [NVIDIA_Latest]
 # Linux drivers (New Feature branch)
 source = 'jq'
-filter = '[.IDS[] | .downloadInfo | select(.IsFeaturePreview == "1")][0].DisplayVersion'
+filter = '[.IDS[] | .downloadInfo | select(.IsFeaturePreview == "1")][0].DownloadURL | match("-x86_64-([\\d.]+)\\.run$").captures[0].string'
 include_regex = '^[\d.]+$'
 # Query parameters:
 # - psid (Product Series): 131 (GeForce RTX 50 Series)
@@ -261,7 +261,7 @@ url = 'https://gfwsl.geforce.com/services_toolkit/services/com/nvidia/services/A
 [NVIDIA_Beta]
 # Linux drivers (Beta branch)
 source = 'jq'
-filter = '[.IDS[] | .downloadInfo | select(.IsBeta == "1")][0].DisplayVersion'
+filter = '[.IDS[] | .downloadInfo | select(.IsBeta == "1")][0].DownloadURL | match("-x86_64-([\\d.]+)\\.run$").captures[0].string'
 include_regex = '^[\d.]+$'
 # Query parameters:
 # - psid (Product Series): 131 (GeForce RTX 50 Series)
