@@ -331,6 +331,13 @@ source = "regex"
 regex = "AssemblyVersion\\(\"([\\d.]+)\"\\)"
 url = "https://raw.githubusercontent.com/juv/vibranceGUI/master/vibrance.GUI/Properties/AssemblyInfo.cs"
 
+[WinDirStat]
+source = 'github'
+github = 'windirstat/windirstat'
+from_pattern = '^release/v([\d.]+)$'
+to_pattern = '\1'
+use_latest_release = true
+
 [Windows10]
 source = 'regex'
 regex = '<h2>Windows 10 .+? Update \| Version (.+?)</h2>'
@@ -345,8 +352,3 @@ url = 'https://www.microsoft.com/en-us/software-download/windows11'
 source = "regex"
 regex = "Version ([\\d.]+)[\\r\\n]"
 url = "https://www.rarlab.com/rarnew.htm"
-
-[WizTree]
-source = 'regex'
-regex = 'VERSION=([\d.]+)'
-url = 'https://antibody-software.com/files/wiztreeversion.php'
