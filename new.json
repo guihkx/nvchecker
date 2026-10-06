@@ -107,7 +107,7 @@
       "version": "3.14.0.2574"
     },
     "WinDirStat": {
-      "version": "2.9.0",
+      "version": "2.9.2",
       "gitref": "refs/tags/release/v2.8.0",
       "url": "https://github.com/windirstat/windirstat/releases/tag/release/v2.8.0"
     },
