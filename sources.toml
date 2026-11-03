@@ -15,8 +15,8 @@ url = 'https://sourceforge.net/projects/crystaldiskinfo/rss?path=/'
 
 [Discord_Linux]
 source = 'httpheader'
-regex = '/discord-([\d.]+)\.tar\.gz$'
-url = 'https://discord.com/api/download?platform=linux&format=tar.gz'
+regex = '/x64/([\d.]+)/Discord\.tar\.gz$'
+url = 'https://discord.com/api/downloads/distributions/app/installers/latest?arch=x64&channel=stable&platform=linux&format=tar.gz'
 
 [DisplayDriverUninstaller]
 source = 'regex'
